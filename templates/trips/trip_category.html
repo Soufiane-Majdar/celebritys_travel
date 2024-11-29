@@ -1,0 +1,191 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}{{ category|title }} Tours - Celebrity's Travel{% endblock %}
+
+{% block content %}
+<!-- Category Hero -->
+<section class="category-hero position-relative vh-50 d-flex align-items-center" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{% static 'img/'|add:category|add:'-hero.jpg' %}') no-repeat center/cover;">
+    <div class="container text-center text-white">
+        <h1 class="display-3 fw-bold mb-4">{{ category|title }} Tours</h1>
+        <p class="lead mb-0">Discover the magic of Morocco through our {{ category }} experiences</p>
+    </div>
+</section>
+
+<!-- Category Description -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                {% if category == 'cultural' %}
+                <p class="lead">Immerse yourself in Morocco's rich heritage and traditions through our carefully curated cultural tours.</p>
+                {% elif category == 'adventure' %}
+                <p class="lead">Experience the thrill of Morocco's diverse landscapes with our exciting adventure tours.</p>
+                {% elif category == 'nature' %}
+                <p class="lead">Explore Morocco's stunning natural wonders and breathtaking landscapes.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Tours Grid -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-4">
+            {% for destination in destinations %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card tour-card h-100 border-0 shadow-sm overflow-hidden">
+                    <div class="position-relative">
+                        {% if destination.images.first %}
+                        <img src="{{ destination.images.first.image.url }}" class="card-img-top" alt="{{ destination.name }}" style="height: 250px; object-fit: cover;">
+                        {% else %}
+                        <img src="{% static 'img/placeholder.jpg' %}" class="card-img-top" alt="{{ destination.name }}" style="height: 250px; object-fit: cover;">
+                        {% endif %}
+                        <div class="tour-card-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                            <a href="{% url 'trips:trip-detail' destination.slug %}" class="btn btn-light">View Details</a>
+                        </div>
+                        {% if destination.featured %}
+                        <div class="position-absolute top-0 start-0 bg-primary text-white px-3 py-2">
+                            Featured
+                        </div>
+                        {% endif %}
+                        {% if destination.discount %}
+                        <div class="position-absolute top-0 end-0 bg-danger text-white px-3 py-2">
+                            {{ destination.discount }}% OFF
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="card-title mb-0">{{ destination.name }}</h5>
+                            <span class="badge bg-primary">{{ destination.duration }} Days</span>
+                        </div>
+                        <p class="text-muted mb-3">{{ destination.short_description|truncatewords:20 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-primary fw-bold">From ${{ destination.price }}</span>
+                                {% if destination.discount %}
+                                <small class="text-decoration-line-through text-muted ms-2">${{ destination.original_price }}</small>
+                                {% endif %}
+                            </div>
+                            <div class="tour-rating">
+                                {% for i in "12345"|make_list %}
+                                <i class="fas fa-star {% if forloop.counter <= destination.rating %}text-warning{% else %}text-muted{% endif %}"></i>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="tour-features">
+                                <i class="fas fa-users text-primary" title="Group Size"></i>
+                                <small class="ms-1">{{ destination.max_group_size }} max</small>
+                                <i class="fas fa-map-marker-alt text-primary ms-3" title="Location"></i>
+                                <small class="ms-1">{{ destination.location }}</small>
+                            </div>
+                            <div class="tour-availability">
+                                {% if destination.available %}
+                                <span class="badge bg-success">Available</span>
+                                {% else %}
+                                <span class="badge bg-danger">Sold Out</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <div class="py-5">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h3>No tours found</h3>
+                    <p class="text-muted">We couldn't find any tours in this category. Please try another category or contact us for custom tours.</p>
+                    <a href="{% url 'core:contact' %}" class="btn btn-primary mt-3">Contact Us</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Category Features -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="text-center">
+                    <i class="fas fa-check-circle fa-3x text-primary mb-3"></i>
+                    <h4>Expert Guides</h4>
+                    <p class="text-muted">Professional local guides with deep knowledge and experience.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                    <h4>Safe Travel</h4>
+                    <p class="text-muted">Your safety is our top priority with comprehensive insurance coverage.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <i class="fas fa-heart fa-3x text-primary mb-3"></i>
+                    <h4>Satisfaction Guaranteed</h4>
+                    <p class="text-muted">We ensure your trip exceeds expectations or your money back.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="mb-4">Get Exclusive Travel Offers</h2>
+                <p class="lead mb-4">Subscribe to our newsletter and receive special offers on our {{ category }} tours!</p>
+                <form action="{% url 'core:newsletter-signup' %}" method="post" class="row g-2 justify-content-center">
+                    {% csrf_token %}
+                    <div class="col-md-8">
+                        <input type="email" name="email" class="form-control form-control-lg" placeholder="Enter your email" required>
+                    </div>
+                    <div class="col-md-auto">
+                        <button type="submit" class="btn btn-light btn-lg">Subscribe Now</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.vh-50 {
+    height: 50vh;
+}
+
+.tour-card {
+    transition: transform 0.3s ease;
+}
+
+.tour-card:hover {
+    transform: translateY(-5px);
+}
+
+.tour-card-overlay {
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tour-card:hover .tour-card-overlay {
+    opacity: 1;
+}
+
+.tour-features i {
+    font-size: 0.875rem;
+}
+</style>
+{% endblock %}

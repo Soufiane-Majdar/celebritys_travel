@@ -1,0 +1,276 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Celebrity's Travel - Your Premier Moroccan Travel Agency{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero vh-100 position-relative d-flex align-items-center">
+    <div class="hero-video position-absolute w-100 h-100">
+        <video autoplay muted loop class="w-100 h-100 object-fit-cover">
+            <source src="{% static 'video/morocco-hero.mp4' %}" type="video/mp4">
+        </video>
+        <div class="overlay position-absolute w-100 h-100 bg-dark opacity-50"></div>
+    </div>
+    <div class="container position-relative">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center text-white">
+                <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInUp">Discover the Magic of Morocco</h1>
+                <p class="lead mb-5 animate__animated animate__fadeInUp animate__delay-1s">Experience authentic Moroccan culture, breathtaking landscapes, and unforgettable adventures</p>
+                
+                <!-- Search Form -->
+                <div class="search-form bg-white p-4 rounded-3 shadow-lg animate__animated animate__fadeInUp animate__delay-2s">
+                    <form action="{% url 'trips:search' %}" method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <select name="category" class="form-select form-select-lg">
+                                <option value="">Select Experience</option>
+                                <option value="cultural">Cultural Tours</option>
+                                <option value="adventure">Adventure Tours</option>
+                                <option value="desert">Desert Safari</option>
+                                <option value="umrah">Umrah Services</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="location" class="form-control form-control-lg" placeholder="Destination">
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary btn-lg w-100">Search Tours</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Trips Section -->
+<section class="featured-trips py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-lg-6">
+                <h2 class="display-6 fw-bold">Popular Destinations</h2>
+                <p class="text-muted">Explore our hand-picked selection of extraordinary experiences</p>
+            </div>
+            <div class="col-lg-6 text-lg-end">
+                <a href="{% url 'trips:trip-list' %}" class="btn btn-outline-primary">View All Destinations</a>
+            </div>
+        </div>
+        <div class="row g-4">
+            {% for trip in featured_trips %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card trip-card h-100 border-0 shadow-sm overflow-hidden">
+                    <div class="position-relative">
+                        {% if trip.images.first %}
+                        <img src="{{ trip.images.first.image.url }}" class="card-img-top" alt="{{ trip.title }}" style="height: 280px; object-fit: cover;">
+                        {% else %}
+                        <img src="{% static 'img/placeholder.jpg' %}" class="card-img-top" alt="{{ trip.title }}" style="height: 280px; object-fit: cover;">
+                        {% endif %}
+                        <div class="trip-overlay">
+                            <a href="{{ trip.get_absolute_url }}" class="btn btn-light">Explore Now</a>
+                        </div>
+                        {% if trip.discount %}
+                        <div class="position-absolute top-0 end-0 bg-danger text-white px-3 py-2 m-3 rounded-pill">
+                            {{ trip.discount }}% OFF
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-primary rounded-pill">{{ trip.duration }} Days</span>
+                            <div class="trip-rating">
+                                <i class="fas fa-star text-warning"></i>
+                                <span class="ms-1">{{ trip.rating|default:"4.5" }}</span>
+                            </div>
+                        </div>
+                        <h5 class="card-title mb-3">{{ trip.title }}</h5>
+                        <p class="card-text text-muted small mb-3">{{ trip.description|truncatewords:15 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="trip-price">
+                                <span class="h5 text-primary mb-0">${{ trip.price }}</span>
+                                {% if trip.discount %}
+                                <small class="text-decoration-line-through text-muted ms-2">${{ trip.original_price }}</small>
+                                {% endif %}
+                            </div>
+                            <div class="trip-meta">
+                                <small class="text-muted">
+                                    <i class="fas fa-users me-1"></i>{{ trip.max_group_size }} max
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us Section -->
+<section class="why-us py-5 bg-light">
+    <div class="container">
+        <div class="row mb-5 text-center">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-6 fw-bold mb-3">Why Travel with Us</h2>
+                <p class="lead text-muted">Experience Morocco like never before with our premium travel services</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4 bg-white rounded-3 shadow-sm h-100">
+                    <div class="feature-icon bg-primary bg-opacity-10 rounded-circle p-3 d-inline-block mb-4">
+                        <i class="fas fa-map-marked-alt fa-2x text-primary"></i>
+                    </div>
+                    <h4 class="mb-3">Local Expertise</h4>
+                    <p class="text-muted mb-0">Our team of local experts ensures authentic and immersive experiences throughout your journey.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4 bg-white rounded-3 shadow-sm h-100">
+                    <div class="feature-icon bg-primary bg-opacity-10 rounded-circle p-3 d-inline-block mb-4">
+                        <i class="fas fa-hand-holding-heart fa-2x text-primary"></i>
+                    </div>
+                    <h4 class="mb-3">Personalized Service</h4>
+                    <p class="text-muted mb-0">Every journey is tailored to your preferences, ensuring a unique and memorable experience.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4 bg-white rounded-3 shadow-sm h-100">
+                    <div class="feature-icon bg-primary bg-opacity-10 rounded-circle p-3 d-inline-block mb-4">
+                        <i class="fas fa-shield-alt fa-2x text-primary"></i>
+                    </div>
+                    <h4 class="mb-3">Safe & Reliable</h4>
+                    <p class="text-muted mb-0">Your safety and comfort are our top priorities, with comprehensive insurance coverage.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials py-5">
+    <div class="container">
+        <div class="row mb-5 text-center">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-6 fw-bold mb-3">What Our Travelers Say</h2>
+                <p class="lead text-muted">Read about experiences from our satisfied customers</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            {% for testimonial in testimonials %}
+            <div class="col-md-4">
+                <div class="testimonial-card bg-white p-4 rounded-3 shadow-sm h-100">
+                    <div class="rating mb-3">
+                        {% for i in "12345"|make_list %}
+                        <i class="fas fa-star {% if forloop.counter <= testimonial.rating %}text-warning{% else %}text-muted{% endif %}"></i>
+                        {% endfor %}
+                    </div>
+                    <p class="testimonial-text mb-4">"{{ testimonial.content }}"</p>
+                    <div class="d-flex align-items-center">
+                        {% if testimonial.image %}
+                        <img src="{{ testimonial.image.url }}" alt="{{ testimonial.name }}" class="rounded-circle me-3" width="50" height="50">
+                        {% endif %}
+                        <div>
+                            <h5 class="mb-1">{{ testimonial.name }}</h5>
+                            {% if testimonial.role %}
+                            <p class="text-muted small mb-0">{{ testimonial.role }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="newsletter py-5 bg-primary">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center text-white">
+                <h2 class="display-6 fw-bold mb-4">Get Travel Inspiration</h2>
+                <p class="lead mb-4">Subscribe to our newsletter for exclusive deals and travel tips</p>
+                <form action="{% url 'core:newsletter-signup' %}" method="post" class="newsletter-form">
+                    {% csrf_token %}
+                    <div class="row g-2 justify-content-center">
+                        <div class="col-md-8">
+                            <input type="email" name="email" class="form-control form-control-lg" placeholder="Enter your email address" required>
+                        </div>
+                        <div class="col-md-auto">
+                            <button type="submit" class="btn btn-light btn-lg px-4">Subscribe</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.hero {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{% static "img/hero-bg.jpg" %}') no-repeat center/cover;
+}
+
+.trip-card {
+    transition: transform 0.3s ease;
+}
+
+.trip-card:hover {
+    transform: translateY(-5px);
+}
+
+.trip-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.trip-card:hover .trip-overlay {
+    opacity: 1;
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.testimonial-card {
+    transition: transform 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+}
+
+.search-form {
+    background: rgba(255,255,255,0.95);
+}
+
+@media (max-width: 768px) {
+    .hero {
+        min-height: 100vh;
+    }
+    
+    .search-form {
+        margin: 0 15px;
+    }
+}
+</style>
+
+<!-- Add Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+{% endblock %}

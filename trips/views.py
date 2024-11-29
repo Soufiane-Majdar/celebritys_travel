@@ -66,5 +66,28 @@ def submit_inquiry(request):
     
     return redirect(request.META.get('HTTP_REFERER', 'trips:trip-list'))
 
+def search(request):
+    query = request.GET.get('location', '')
+    category = request.GET.get('category', '')
+    
+    trips = Destination.objects.all()
+    
+    if query:
+        trips = trips.filter(location__icontains=query)
+    
+    if category:
+        trips = trips.filter(trip_type=category)
+    
+    paginator = Paginator(trips, 9)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'page_obj': page_obj,
+        'query': query,
+        'category': category,
+    }
+    return render(request, 'trips/trip_list.html', context)
+
 def umrah_services(request):
     return render(request, 'trips/umrah_services.html')

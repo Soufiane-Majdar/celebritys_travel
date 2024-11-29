@@ -1,0 +1,120 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}FAQs - Celebrity's Travel{% endblock %}
+
+{% block content %}
+<!-- FAQ Hero Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h1 class="display-4 text-center mb-4">Frequently Asked Questions</h1>
+        <p class="lead text-center mb-5">Find answers to common questions about our services and travel experiences.</p>
+        
+        <!-- FAQ Categories -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-8">
+                <ul class="nav nav-pills justify-content-center" id="faqTabs" role="tablist">
+                    {% for category in categories %}
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link {% if forloop.first %}active{% endif %}" 
+                                id="{{ category }}-tab"
+                                data-bs-toggle="pill"
+                                data-bs-target="#{{ category }}"
+                                type="button"
+                                role="tab">
+                            {{ category|title }}
+                        </button>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        
+        <!-- FAQ Content -->
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="tab-content" id="faqTabContent">
+                    {% for category, faqs in faqs_by_category.items %}
+                    <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" 
+                         id="{{ category }}" 
+                         role="tabpanel">
+                        <div class="accordion" id="{{ category }}Accordion">
+                            {% for faq in faqs %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" 
+                                            type="button" 
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#{{ category }}Collapse{{ forloop.counter }}">
+                                        {{ faq.question }}
+                                    </button>
+                                </h2>
+                                <div id="{{ category }}Collapse{{ forloop.counter }}" 
+                                     class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
+                                     data-bs-parent="#{{ category }}Accordion">
+                                    <div class="accordion-body">
+                                        {{ faq.answer|safe }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <p class="text-center text-muted">No FAQs available for this category.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Still Have Questions Section -->
+<section class="py-5">
+    <div class="container text-center">
+        <h2 class="mb-4">Still Have Questions?</h2>
+        <p class="lead mb-4">Can't find what you're looking for? We're here to help!</p>
+        <div class="row justify-content-center">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="fas fa-envelope fa-3x text-primary mb-3"></i>
+                        <h4>Email Us</h4>
+                        <p>Send us your questions and we'll get back to you within 24 hours.</p>
+                        <a href="mailto:info@celebritystravel.com" class="btn btn-outline-primary">Email Now</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="fas fa-phone fa-3x text-primary mb-3"></i>
+                        <h4>Call Us</h4>
+                        <p>Speak directly with one of our travel experts.</p>
+                        <a href="tel:+212123456789" class="btn btn-outline-primary">Call Now</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <i class="fas fa-comments fa-3x text-primary mb-3"></i>
+                        <h4>Live Chat</h4>
+                        <p>Chat with our customer service team in real-time.</p>
+                        <button class="btn btn-outline-primary" onclick="openLiveChat()">Start Chat</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function openLiveChat() {
+    // Add your live chat implementation here
+    alert('Live chat feature coming soon!');
+}
+</script>
+{% endblock %}
