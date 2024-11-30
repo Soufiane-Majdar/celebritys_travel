@@ -1,0 +1,551 @@
+# Arabic translations
+msgid ""
+msgstr ""
+"Project-Id-Version: celebritys_travel\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-11-30 21:23+0000\n"
+"PO-Revision-Date: 2024-01-10 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Arabic\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: templates/base/base.html:9
+msgid "Celebrity's Travel - Your Premier Moroccan Travel Agency"
+msgstr "سيليبريتيز ترافل - وكالة السفر المغربية الرائدة"
+
+#: templates/base/base.html:12
+msgid ""
+"Celebrity's Travel - Your premier travel agency in Morocco offering luxury "
+"tours, cultural experiences, and Umrah services."
+msgstr "سيليبريتيز ترافل - وكالة السفر الرائدة في المغرب تقدم جولات فاخرة وتجارب ثقافية وخدمات العمرة."
+
+#: templates/base/base.html:13
+msgid ""
+"Morocco travel, luxury tours, cultural experiences, Umrah services, "
+"Marrakech tours, desert tours"
+msgstr "السفر إلى المغرب، جولات فاخرة، تجارب ثقافية، خدمات العمرة، جولات مراكش، جولات الصحراء"
+
+#: templates/base/base.html:227 templates/base/base.html:358
+msgid "Celebrity's Travel"
+msgstr "سيليبريتيز ترافل"
+
+#: templates/base/base.html:239
+msgid "Home"
+msgstr "الرئيسية"
+
+#: templates/base/base.html:243
+msgid "Trips"
+msgstr "الرحلات"
+
+#: templates/base/base.html:246 templates/core/home.html:21
+msgid "Cultural Tours"
+msgstr "جولات ثقافية"
+
+#: templates/base/base.html:247 templates/core/home.html:22
+msgid "Adventure Tours"
+msgstr "جولات المغامرة"
+
+#: templates/base/base.html:248
+msgid "Desert Tours"
+msgstr "جولات الصحراء"
+
+#: templates/base/base.html:250
+msgid "All Destinations"
+msgstr "جميع الوجهات"
+
+#: templates/base/base.html:254
+msgid "Umrah"
+msgstr "العمرة"
+
+#: templates/base/base.html:257
+msgid "Blog"
+msgstr "المدونة"
+
+#: templates/base/base.html:260
+msgid "About"
+msgstr "عن الشركة"
+
+#: templates/base/base.html:263
+msgid "Contact"
+msgstr "اتصل بنا"
+
+#: templates/base/base.html:266
+msgid "Book Now"
+msgstr "احجز الآن"
+
+#: templates/base/base.html:312
+msgid "Address"
+msgstr "العنوان"
+
+#: templates/base/base.html:313
+msgid ""
+"Your premier travel agency in Morocco offering luxury tours, cultural "
+"experiences, and Umrah services. We create unforgettable journeys tailored "
+"to your dreams."
+msgstr "وكالة السفر الرائدة في المغرب تقدم جولات فاخرة وتجارب ثقافية وخدمات العمرة. نصنع رحلات لا تُنسى مصممة حسب أحلامك."
+
+#: templates/base/base.html:315
+msgid "Facebook"
+msgstr "فيسبوك"
+
+#: templates/base/base.html:316
+msgid "Instagram"
+msgstr "إنستجرام"
+
+#: templates/base/base.html:317
+msgid "Twitter"
+msgstr "تويتر"
+
+#: templates/base/base.html:318
+msgid "YouTube"
+msgstr "يوتيوب"
+
+#: templates/base/base.html:322
+msgid "Quick Links"
+msgstr "روابط سريعة"
+
+#: templates/base/base.html:324
+msgid "About Us"
+msgstr "من نحن"
+
+#: templates/base/base.html:325
+msgid "Our Tours"
+msgstr "رحلاتنا"
+
+#: templates/base/base.html:326 templates/core/home.html:24
+msgid "Umrah Services"
+msgstr "خدمات العمرة"
+
+#: templates/base/base.html:327
+msgid "Travel Blog"
+msgstr "مدونة السفر"
+
+#: templates/base/base.html:328
+msgid "Contact Us"
+msgstr "اتصل بنا"
+
+#: templates/base/base.html:332 templates/core/home.html:50
+msgid "Popular Destinations"
+msgstr "الوجهات المشهورة"
+
+#: templates/base/base.html:334
+msgid "Marrakech"
+msgstr "مراكش"
+
+#: templates/base/base.html:335
+msgid "Sahara Desert"
+msgstr "صحراء الصحراء"
+
+#: templates/base/base.html:336
+msgid "Fes"
+msgstr "فاس"
+
+#: templates/base/base.html:337
+msgid "Chefchaouen"
+msgstr "شفشاون"
+
+#: templates/base/base.html:338
+msgid "Casablanca"
+msgstr "الدار البيضاء"
+
+#: templates/base/base.html:342
+msgid "Newsletter"
+msgstr "النشرة الإخبارية"
+
+#: templates/base/base.html:343
+msgid "Subscribe to receive exclusive offers and travel tips."
+msgstr "اشترك للحصول على عروض حصرية ونصائح السفر."
+
+#: templates/base/base.html:347
+msgid "Your email"
+msgstr "بريدك الإلكتروني"
+
+#: templates/base/base.html:348 templates/core/home.html:213
+msgid "Subscribe"
+msgstr "اشترك"
+
+#: templates/base/base.html:358
+msgid "All rights reserved."
+msgstr "جميع الحقوق محفوظة"
+
+#: templates/base/base.html:361
+msgid "Privacy Policy"
+msgstr "سياسة الخصوصية"
+
+#: templates/base/base.html:362
+msgid "Terms of Service"
+msgstr "شروط الخدمة"
+
+#: templates/core/home.html:5
+msgid "Celebrity's Travel - Discover Morocco"
+msgstr "سيليبريتيز ترافل - اكتشف المغرب"
+
+#: templates/core/home.html:13
+msgid "Discover the Magic of Morocco"
+msgstr "اكتشف سحر المغرب"
+
+#: templates/core/home.html:14
+msgid ""
+"Experience authentic Moroccan culture, breathtaking landscapes, and "
+"unforgettable adventures."
+msgstr "استمتع بالثقافة المغربية الأصيلة، والمناظر الطبيعية الخلابة، والمغامرات التي لا تُنسى."
+
+#: templates/core/home.html:18
+msgid "Experience"
+msgstr "التجربة"
+
+#: templates/core/home.html:20
+msgid "All Experiences"
+msgstr "جميع التجارب"
+
+#: templates/core/home.html:23
+#, fuzzy
+#| msgid "Desert Tours"
+msgid "Desert Safari"
+msgstr "سفاري الصحراء"
+
+#: templates/core/home.html:28
+#, fuzzy
+#| msgid "All Destinations"
+msgid "Destination"
+msgstr "الوجهة"
+
+#: templates/core/home.html:29
+msgid "Where to?"
+msgstr "إلى أين؟"
+
+#: templates/core/home.html:33
+msgid "Search"
+msgstr "بحث"
+
+#: templates/core/home.html:39
+msgid "Morocco Travel"
+msgstr "السفر إلى المغرب"
+
+#: templates/core/home.html:51
+msgid "Explore our hand-picked selection of extraordinary experiences."
+msgstr "اكتشف مجموعتنا المختارة من التجارب الاستثنائية."
+
+#: templates/core/home.html:54
+#, fuzzy
+#| msgid "All Destinations"
+msgid "View All Destinations"
+msgstr "عرض جميع الوجهات"
+
+#: templates/core/home.html:73
+msgid "Add to favorites"
+msgstr "أضف إلى المفضلة"
+
+#: templates/core/home.html:100 templates/core/home.html:102
+msgid "MAD"
+msgstr "درهم"
+
+#: templates/core/home.html:104
+msgid "per person"
+msgstr "للشخص"
+
+#: templates/core/home.html:108
+msgid "days"
+msgstr "أيام"
+
+#: templates/core/home.html:111
+msgid "Max"
+msgstr "الحد الأقصى"
+
+#: templates/core/home.html:128
+msgid "Why Travel with Us"
+msgstr "لماذا تسافر معنا"
+
+#: templates/core/home.html:129
+msgid "Experience Morocco like never before with our premium travel services."
+msgstr "اختبر المغرب كما لم تعرفه من قبل مع خدمات السفر المميزة لدينا."
+
+#: templates/core/home.html:138
+msgid "Local Expertise"
+msgstr "خبرة محلية"
+
+#: templates/core/home.html:139
+msgid ""
+"Our team of local experts ensures authentic and immersive experiences "
+"throughout your journey."
+msgstr "يضمن فريقنا من الخبراء المحليين تجارب أصيلة وغامرة طوال رحلتك."
+
+#: templates/core/home.html:147
+#, fuzzy
+#| msgid "Terms of Service"
+msgid "Personalized Service"
+msgstr "خدمة شخصية"
+
+#: templates/core/home.html:148
+msgid ""
+"Every journey is tailored to your preferences, ensuring a unique and "
+"memorable experience."
+msgstr "كل رحلة مصممة حسب تفضيلاتك، مما يضمن تجربة فريدة لا تُنسى."
+
+#: templates/core/home.html:156
+msgid "Safe & Reliable"
+msgstr "آمن وموثوق"
+
+#: templates/core/home.html:157
+msgid ""
+"Your safety and comfort are our top priorities, with comprehensive insurance "
+"coverage."
+msgstr "سلامتك وراحتك من أهم أولوياتنا، مع تغطية تأمينية شاملة."
+
+#: templates/core/home.html:169
+msgid "What Our Travelers Say"
+msgstr "ماذا يقول مسافرونا"
+
+#: templates/core/home.html:170
+msgid "Read about experiences from our satisfied customers."
+msgstr "اقرأ عن تجارب عملائنا الراضين."
+
+#: templates/core/home.html:207
+msgid "Get Travel Updates"
+msgstr "احصل على تحديثات السفر"
+
+#: templates/core/home.html:208
+msgid "Subscribe to our newsletter and never miss our special offers!"
+msgstr "اشترك في نشرتنا الإخبارية ولا تفوت عروضنا الخاصة!"
+
+#: templates/core/home.html:211
+#, fuzzy
+#| msgid "Your email"
+msgid "Enter your email"
+msgstr "أدخل بريدك الإلكتروني"
+
+#: templates/core/home.html:211
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1845
+#, fuzzy
+#| msgid "Address"
+msgid "Email address"
+msgstr "عنوان البريد الإلكتروني"
+
+#: templates/core/home.html:213
+msgid "Subscribe"
+msgstr "اشترك"
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/forms.py:6
+msgid "Search files"
+msgstr "بحث الملفات"
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:5
+msgid "Select an image to embed"
+msgstr "اختر صورة لإدراجها"
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:27
+msgid "Browse for the image you want, then click 'Embed Image' to continue..."
+msgstr "استعرض الصور التي تريدها، ثم انقر على 'إدراج الصورة' للمتابعة..."
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:29
+msgid ""
+"No images found. Upload images using the 'Image Button' dialog's 'Upload' "
+"tab."
+msgstr "لم يتم العثور على صور. قم تحميل الصور باستخدام حوار 'زر الصورة' وتاب 'تحميل'."
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:50
+msgid "Images in: "
+msgstr "الصور في: "
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:62
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:80
+msgid "Embed Image"
+msgstr "إدراج الصورة"
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:146
+msgid "Play Slideshow"
+msgstr "تشغيل العرض"
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:147
+msgid "Pause Slideshow"
+msgstr "إيقاف العرض"
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:148
+msgid "&lsaquo; Previous Photo"
+msgstr "&lsaquo; الصورة السابقة"
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:149
+msgid "Next Photo &rsaquo;"
+msgstr "الصورة التالية &rsaquo;"
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:150
+msgid "Next &rsaquo;"
+msgstr "التالي &rsaquo;"
+
+#: venv/lib/python3.12/site-packages/ckeditor_uploader/templates/ckeditor/browse.html:151
+msgid "&lsaquo; Prev"
+msgstr "&lsaquo; السابق"
+
+#: venv/lib/python3.12/site-packages/django/contrib/messages/apps.py:15
+msgid "Messages"
+msgstr "الرسائل"
+
+#: venv/lib/python3.12/site-packages/django/contrib/sitemaps/apps.py:8
+msgid "Site Maps"
+msgstr "خرائط الموقع"
+
+#: venv/lib/python3.12/site-packages/django/contrib/staticfiles/apps.py:9
+msgid "Static Files"
+msgstr "الملفات الثابتة"
+
+#: venv/lib/python3.12/site-packages/django/contrib/syndication/apps.py:7
+msgid "Syndication"
+msgstr "النشر"
+
+#. Translators: String used to replace omitted page numbers in elided page
+#. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
+#: venv/lib/python3.12/site-packages/django/core/paginator.py:30
+msgid "…"
+msgstr "…"
+
+#: templates/trip_list.html:5
+msgid "All Trips"
+msgstr "جميع الرحلات"
+
+#: templates/trip_list.html:10
+msgid "Discover Morocco"
+msgstr "اكتشف المغرب"
+
+#: templates/trip_list.html:15
+msgid ""
+"Experience the magic of Morocco with our carefully curated trips. From "
+"ancient medinas to vast deserts, create memories that last a lifetime."
+msgstr "اختبر سحر المغرب مع رحلاتنا المختارة بعناية. من المدن القديمة إلى الصحاري الشاسعة، اصنع ذكريات تدوم مدى الحياة."
+
+#: templates/trip_list.html:20
+msgid "Destination"
+msgstr "الوجهة"
+
+#: templates/trip_list.html:25
+msgid "Where do you want to go?"
+msgstr "إلى أين تريد الذهاب؟"
+
+#: templates/trip_list.html:30
+msgid "Trip Type"
+msgstr "نوع الرحلة"
+
+#: templates/trip_list.html:35
+msgid "All Types"
+msgstr "جميع الأنواع"
+
+#: templates/trip_list.html:40
+msgid "Adventure"
+msgstr "مغامرة"
+
+#: templates/trip_list.html:45
+msgid "Cultural"
+msgstr "ثقافي"
+
+#: templates/trip_list.html:50
+msgid "Desert Safari"
+msgstr "رحلة صحراوية"
+
+#: templates/trip_list.html:55
+msgid "Search"
+msgstr "بحث"
+
+#: templates/trip_list.html:60
+msgid "Duration"
+msgstr "المدة"
+
+#: templates/trip_list.html:65
+msgid "days"
+msgstr "أيام"
+
+#: templates/trip_list.html:70
+msgid "From"
+msgstr "من"
+
+#: templates/trip_list.html:75
+msgid "Book Now"
+msgstr "احجز الآن"
+
+#: templates/trip_list.html:80
+msgid "Previous"
+msgstr "السابق"
+
+#: templates/trip_list.html:85
+msgid "Next"
+msgstr "التالي"
+
+#: templates/trip_list.html:90
+msgid "Subscribe to our Newsletter"
+msgstr "اشترك في نشرتنا الإخبارية"
+
+#: templates/trip_list.html:95
+msgid "Stay updated with our latest trips, exclusive offers, and travel tips."
+msgstr "ابق على اطلاع بآخر رحلاتنا وعروضنا الحصرية ونصائح السفر."
+
+#: templates/trip_list.html:100
+msgid "Enter your email"
+msgstr "أدخل بريدك الإلكتروني"
+
+#: templates/trip_list.html:105
+msgid "Subscribe"
+msgstr "اشترك"
+
+#: templates/contact.html:5
+msgid "Contact Us"
+msgstr "اتصل بنا"
+
+#: templates/contact.html:10
+msgid "Get in Touch"
+msgstr "تواصل معنا"
+
+#: templates/contact.html:15
+msgid ""
+"We'd love to hear from you. Please fill out this form or shoot us an email."
+msgstr "يسعدنا أن نسمع منك. يرجى ملء هذا النموذج أو مراسلتنا عبر البريد الإلكتروني."
+
+#: templates/contact.html:20
+msgid "Full Name"
+msgstr "الاسم الكامل"
+
+#: templates/contact.html:25
+msgid "Email Address"
+msgstr "البريد الإلكتروني"
+
+#: templates/contact.html:30
+msgid "Phone Number"
+msgstr "رقم الهاتف"
+
+#: templates/contact.html:35
+msgid "Message"
+msgstr "الرسالة"
+
+#: templates/contact.html:40
+msgid "Send Message"
+msgstr "إرسال الرسالة"
+
+#: templates/about.html:5
+msgid "About Us"
+msgstr "معلومات عنا"
+
+#: templates/about.html:10
+msgid "Our Story"
+msgstr "قصتنا"
+
+#: templates/about.html:15
+msgid "Why Choose Us"
+msgstr "لماذا تختارنا"
+
+#: templates/about.html:20
+msgid "Our Team"
+msgstr "فريقنا"
+
+#: templates/faq.html:5
+msgid "Frequently Asked Questions"
+msgstr "الأسئلة الشائعة"
+
+#: templates/faq.html:10
+msgid "Common Questions"
+msgstr "الأسئلة المتداولة"
+
+#: templates/faq.html:15
+msgid "Have more questions?"
+msgstr "هل لديك المزيد من الأسئلة؟"

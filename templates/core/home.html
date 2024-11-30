@@ -1,7 +1,8 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load i18n %}
 
-{% block title %}Celebrity's Travel - Discover Morocco{% endblock %}
+{% block title %}{% trans "Celebrity's Travel - Discover Morocco" %}{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
@@ -9,33 +10,33 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6" data-aos="fade-right">
-                <h1 class="display-4 fw-bold mb-4">Discover the Magic of Morocco</h1>
-                <p class="lead text-muted mb-4">Experience authentic Moroccan culture, breathtaking landscapes, and unforgettable adventures.</p>
+                <h1 class="display-4 fw-bold mb-4">{% trans "Discover the Magic of Morocco" %}</h1>
+                <p class="lead text-muted mb-4">{% trans "Experience authentic Moroccan culture, breathtaking landscapes, and unforgettable adventures." %}</p>
                 <div class="search-box bg-white p-4 rounded-3 shadow-sm">
                     <form action="{% url 'trips:search' %}" method="get" class="row g-2">
                         <div class="col-md-5">
-                            <label class="form-label small text-muted">Experience</label>
+                            <label class="form-label small text-muted">{% trans "Experience" %}</label>
                             <select name="category" class="form-select">
-                                <option value="">All Experiences</option>
-                                <option value="cultural">Cultural Tours</option>
-                                <option value="adventure">Adventure Tours</option>
-                                <option value="desert">Desert Safari</option>
-                                <option value="umrah">Umrah Services</option>
+                                <option value="">{% trans "All Experiences" %}</option>
+                                <option value="cultural">{% trans "Cultural Tours" %}</option>
+                                <option value="adventure">{% trans "Adventure Tours" %}</option>
+                                <option value="desert">{% trans "Desert Safari" %}</option>
+                                <option value="umrah">{% trans "Umrah Services" %}</option>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label small text-muted">Destination</label>
-                            <input type="text" name="location" class="form-control" placeholder="Where to?">
+                            <label class="form-label small text-muted">{% trans "Destination" %}</label>
+                            <input type="text" name="location" class="form-control" placeholder="{% trans 'Where to?' %}">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label small text-muted">&nbsp;</label>
-                            <button type="submit" class="btn btn-primary w-100">Search</button>
+                            <button type="submit" class="btn btn-primary w-100">{% trans "Search" %}</button>
                         </div>
                     </form>
                 </div>
             </div>
             <div class="col-lg-6 d-none d-lg-block" data-aos="fade-left">
-                <img src="{% static 'images/hero-image.jpg' %}" alt="Morocco Travel" class="img-fluid rounded-3 shadow">
+                <img src="{% static 'images/hero-image.jpg' %}" alt="{% trans 'Morocco Travel' %}" class="img-fluid rounded-3 shadow">
             </div>
         </div>
     </div>
@@ -46,11 +47,11 @@
     <div class="container">
         <div class="row mb-5">
             <div class="col-lg-6">
-                <h2 class="display-6 fw-bold">Popular Destinations</h2>
-                <p class="text-muted">Explore our hand-picked selection of extraordinary experiences.</p>
+                <h2 class="display-6 fw-bold">{% trans "Popular Destinations" %}</h2>
+                <p class="text-muted">{% trans "Explore our hand-picked selection of extraordinary experiences." %}</p>
             </div>
             <div class="col-lg-6 text-lg-end">
-                <a href="{% url 'trips:trip-list' %}" class="btn btn-outline-primary">View All Destinations</a>
+                <a href="{% url 'trips:trip-list' %}" class="btn btn-outline-primary">{% trans "View All Destinations" %}</a>
             </div>
         </div>
         <div class="row g-4">
@@ -69,7 +70,7 @@
                         </div>
                         {% endif %}
                         <div class="position-absolute top-0 end-0 m-3">
-                            <button class="btn btn-light btn-sm rounded-circle shadow-sm" title="Add to favorites">
+                            <button class="btn btn-light btn-sm rounded-circle shadow-sm" title="{% trans 'Add to favorites' %}">
                                 <i class="far fa-heart"></i>
                             </button>
                         </div>
@@ -96,18 +97,18 @@
                             <div>
                                 <p class="card-text mb-0">
                                     {% if trip.original_price %}
-                                    <small class="text-decoration-line-through text-muted">{{ trip.original_price }} MAD</small>
+                                    <small class="text-decoration-line-through text-muted">{{ trip.original_price }} {% trans "MAD" %}</small>
                                     {% endif %}
-                                    <span class="fw-bold text-primary">{{ trip.price }} MAD</span>
+                                    <span class="fw-bold text-primary">{{ trip.price }} {% trans "MAD" %}</span>
                                 </p>
-                                <small class="text-muted">per person</small>
+                                <small class="text-muted">{% trans "per person" %}</small>
                             </div>
                             <div class="text-end">
                                 <p class="card-text mb-0">
-                                    <i class="far fa-clock me-1"></i> {{ trip.duration }} days
+                                    <i class="far fa-clock me-1"></i> {{ trip.duration }} {% trans "days" %}
                                 </p>
                                 <small class="text-muted">
-                                    <i class="fas fa-users me-1"></i> Max {{ trip.max_group_size }}
+                                    <i class="fas fa-users me-1"></i> {% trans "Max" %} {{ trip.max_group_size }}
                                 </small>
                             </div>
                         </div>
@@ -124,8 +125,8 @@
     <div class="container">
         <div class="row mb-5 text-center">
             <div class="col-lg-8 mx-auto">
-                <h2 class="display-6 fw-bold mb-3">Why Travel with Us</h2>
-                <p class="lead text-muted">Experience Morocco like never before with our premium travel services.</p>
+                <h2 class="display-6 fw-bold mb-3">{% trans "Why Travel with Us" %}</h2>
+                <p class="lead text-muted">{% trans "Experience Morocco like never before with our premium travel services." %}</p>
             </div>
         </div>
         <div class="row g-4">
@@ -134,8 +135,8 @@
                     <div class="feature-icon bg-primary bg-opacity-10 rounded-circle p-3 d-inline-block mb-4">
                         <i class="fas fa-map-marked-alt fa-2x text-primary"></i>
                     </div>
-                    <h4 class="mb-3">Local Expertise</h4>
-                    <p class="text-muted mb-0">Our team of local experts ensures authentic and immersive experiences throughout your journey.</p>
+                    <h4 class="mb-3">{% trans "Local Expertise" %}</h4>
+                    <p class="text-muted mb-0">{% trans "Our team of local experts ensures authentic and immersive experiences throughout your journey." %}</p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -143,8 +144,8 @@
                     <div class="feature-icon bg-primary bg-opacity-10 rounded-circle p-3 d-inline-block mb-4">
                         <i class="fas fa-hand-holding-heart fa-2x text-primary"></i>
                     </div>
-                    <h4 class="mb-3">Personalized Service</h4>
-                    <p class="text-muted mb-0">Every journey is tailored to your preferences, ensuring a unique and memorable experience.</p>
+                    <h4 class="mb-3">{% trans "Personalized Service" %}</h4>
+                    <p class="text-muted mb-0">{% trans "Every journey is tailored to your preferences, ensuring a unique and memorable experience." %}</p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -152,8 +153,8 @@
                     <div class="feature-icon bg-primary bg-opacity-10 rounded-circle p-3 d-inline-block mb-4">
                         <i class="fas fa-shield-alt fa-2x text-primary"></i>
                     </div>
-                    <h4 class="mb-3">Safe & Reliable</h4>
-                    <p class="text-muted mb-0">Your safety and comfort are our top priorities, with comprehensive insurance coverage.</p>
+                    <h4 class="mb-3">{% trans "Safe & Reliable" %}</h4>
+                    <p class="text-muted mb-0">{% trans "Your safety and comfort are our top priorities, with comprehensive insurance coverage." %}</p>
                 </div>
             </div>
         </div>
@@ -165,8 +166,8 @@
     <div class="container">
         <div class="row mb-5 text-center">
             <div class="col-lg-8 mx-auto">
-                <h2 class="display-6 fw-bold mb-3">What Our Travelers Say</h2>
-                <p class="lead text-muted">Read about experiences from our satisfied customers.</p>
+                <h2 class="display-6 fw-bold mb-3">{% trans "What Our Travelers Say" %}</h2>
+                <p class="lead text-muted">{% trans "Read about experiences from our satisfied customers." %}</p>
             </div>
         </div>
         <div class="row g-4">
@@ -178,7 +179,7 @@
                         <i class="fas fa-star {% if forloop.counter <= testimonial.rating %}text-warning{% else %}text-muted{% endif %}"></i>
                         {% endfor %}
                     </div>
-                    <p class="testimonial-text mb-4">"{{ testimonial.content }}"</p>
+                    <p class="testimonial-text mb-4">"{% trans testimonial.content %}"</p>
                     <div class="d-flex align-items-center">
                         {% if testimonial.image %}
                         <img src="{{ testimonial.image.url }}" alt="{{ testimonial.name }}" class="rounded-circle me-3" width="50" height="50">
@@ -203,13 +204,13 @@
         <div class="row justify-content-center">
             <div class="col-lg-8 text-center">
                 <div class="newsletter-content bg-white bg-opacity-10 p-5 rounded-3 backdrop-blur" data-aos="fade-up">
-                    <h2 class="display-6 text-white mb-3">Get Travel Updates</h2>
-                    <p class="lead text-white mb-4">Subscribe to our newsletter and never miss our special offers!</p>
+                    <h2 class="display-6 text-white mb-3">{% trans "Get Travel Updates" %}</h2>
+                    <p class="lead text-white mb-4">{% trans "Subscribe to our newsletter and never miss our special offers!" %}</p>
                     <form class="newsletter-form mx-auto" style="max-width: 500px;">
                         <div class="input-group">
-                            <input type="email" class="form-control form-control-lg border-0" placeholder="Enter your email" aria-label="Email address">
+                            <input type="email" class="form-control form-control-lg border-0" placeholder="{% trans 'Enter your email' %}" aria-label="{% trans 'Email address' %}">
                             <button class="btn btn-lg" type="submit" style="background-color: #C19B76; color: white;">
-                                Subscribe
+                                {% trans "Subscribe" %}
                                 <i class="fas fa-paper-plane ms-2"></i>
                             </button>
                         </div>
