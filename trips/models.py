@@ -16,17 +16,20 @@ class Destination(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     description = RichTextField()
-    location = models.CharField(max_length=200)
+    location = models.CharField(max_length=200, default='Morocco')
     price = models.DecimalField(max_digits=10, decimal_places=2)
     original_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     discount = models.PositiveIntegerField(null=True, blank=True)
     duration = models.PositiveIntegerField(help_text="Duration in days")
     max_group_size = models.PositiveIntegerField(default=15)
-    rating = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True)
+    rating = models.DecimalField(max_digits=3, decimal_places=1, default=4.5)
     trip_type = models.CharField(max_length=20, choices=TRIP_TYPES)
     featured = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
     
     def __str__(self):
         return self.title

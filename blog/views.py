@@ -76,3 +76,28 @@ def add_comment(request, slug):
             messages.error(request, "There was an error submitting your comment. Please try again.")
     
     return redirect('blog:post-detail', slug=slug)
+
+def search(request):
+    query = request.GET.get('q', '')
+    if query:
+        posts = Post.objects.filter(
+            published=True
+        ).filter(
+            title__icontains=query
+        ) | Post.objects.filter(
+            published=True
+        ).filter(
+            content__icontains=query
+        )
+    else:
+        posts = Post.objects.filter(published=True)
+    
+    paginator = Paginator(posts, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'page_obj': page_obj,
+        'query': query,
+    }
+    return render(request, 'blog/post_list.html', context)

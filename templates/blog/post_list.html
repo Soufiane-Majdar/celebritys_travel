@@ -24,8 +24,8 @@
             </div>
             <div class="blog-search">
                 <form action="{% url 'blog:search' %}" method="get" class="d-flex">
-                    <input type="search" name="q" class="form-control form-control-sm me-2" placeholder="Search blog..." value="{{ request.GET.q }}">
-                    <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search"></i></button>
+                    <input type="search" name="q" class="form-control me-2" placeholder="Search posts..." value="{{ query|default:'' }}">
+                    <button class="btn btn-outline-primary" type="submit">Search</button>
                 </form>
             </div>
         </div>

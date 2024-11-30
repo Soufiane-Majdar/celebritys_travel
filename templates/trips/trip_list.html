@@ -86,7 +86,7 @@
     <div class="container">
         <div class="row g-4">
             {% for trip in page_obj %}
-            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter|multiply:100 }}">
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1|add:"00" }}">
                 <div class="card trip-card h-100 border-0 shadow-sm overflow-hidden">
                     <div class="position-relative">
                         {% if trip.images.first %}

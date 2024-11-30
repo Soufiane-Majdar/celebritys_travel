@@ -3,15 +3,16 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 from trips.models import Destination
+from blog.models import Post
 from .models import Testimonial, FAQ, Newsletter
 
 def home(request):
     featured_trips = Destination.objects.filter(featured=True)[:6]
-    testimonials = Testimonial.objects.filter(active=True)[:3]
+    latest_posts = Post.objects.all()[:3]
     
     context = {
         'featured_trips': featured_trips,
-        'testimonials': testimonials,
+        'latest_posts': latest_posts,
     }
     return render(request, 'core/home.html', context)
 
