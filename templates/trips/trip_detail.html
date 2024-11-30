@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base/base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
 
@@ -6,58 +6,81 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero-section position-relative vh-50 d-flex align-items-center" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{{ trip.image.url }}') no-repeat center/cover;">
+<section class="hero-section position-relative vh-75 d-flex align-items-center" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{{ trip.images.first.image.url }}') no-repeat center/cover;">
     <div class="container text-center text-white">
-        <h1 class="display-4 fw-bold mb-4">{{ trip.title }}</h1>
         <nav aria-label="breadcrumb">
-            <ol class="breadcrumb justify-content-center">
+            <ol class="breadcrumb justify-content-center mb-4">
                 <li class="breadcrumb-item"><a href="{% url 'core:home' %}" class="text-white">Home</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'trips:trip-category' trip.trip_type %}" class="text-white">{{ trip.trip_type|title }}</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'trips:trip-category' trip.trip_type %}" class="text-white">{{ trip.get_trip_type_display }}</a></li>
                 <li class="breadcrumb-item active text-white" aria-current="page">{{ trip.title }}</li>
             </ol>
         </nav>
+        <h1 class="display-3 fw-bold mb-4" data-aos="fade-up">{{ trip.title }}</h1>
+        <div class="d-flex justify-content-center gap-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-clock me-2"></i>
+                <span>{{ trip.duration }} Days</span>
+            </div>
+            <div class="d-flex align-items-center">
+                <i class="fas fa-map-marker-alt me-2"></i>
+                <span>{{ trip.location }}</span>
+            </div>
+            <div class="d-flex align-items-center">
+                <i class="fas fa-users me-2"></i>
+                <span>Max {{ trip.max_group_size }} People</span>
+            </div>
+            <div class="d-flex align-items-center">
+                <i class="fas fa-star me-2"></i>
+                <span>{{ trip.rating }} Rating</span>
+            </div>
+        </div>
+    </div>
+    <div class="hero-scroll-down">
+        <a href="#trip-details" class="text-white">
+            <i class="fas fa-chevron-down fa-2x"></i>
+        </a>
     </div>
 </section>
 
-<!-- Trip Details -->
-<section class="py-5">
+<!-- Trip Details Section -->
+<section id="trip-details" class="py-5">
     <div class="container">
         <div class="row">
             <!-- Main Content -->
             <div class="col-lg-8 mb-4 mb-lg-0">
                 <!-- Trip Overview -->
-                <div class="card shadow-sm mb-4">
+                <div class="card shadow-sm mb-4" data-aos="fade-up">
                     <div class="card-body">
-                        <h2 class="h4 mb-4">Trip Overview</h2>
-                        <div class="d-flex flex-wrap gap-4 mb-4">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-clock text-primary me-2"></i>
-                                <span>{{ trip.duration }}</span>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-map-marker-alt text-primary me-2"></i>
-                                <span>{{ trip.location }}</span>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-users text-primary me-2"></i>
-                                <span>Group Size: {{ trip.group_size }}</span>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-language text-primary me-2"></i>
-                                <span>{{ trip.languages }}</span>
-                            </div>
-                        </div>
+                        <h2 class="h3 mb-4 text-primary">Trip Overview</h2>
                         <div class="trip-description">
                             {{ trip.description|safe }}
                         </div>
                     </div>
                 </div>
 
-                <!-- Highlights -->
-                {% if trip.highlights %}
-                <div class="card shadow-sm mb-4">
+                <!-- Trip Gallery -->
+                {% if trip.images.all|length > 1 %}
+                <div class="card shadow-sm mb-4" data-aos="fade-up">
                     <div class="card-body">
-                        <h2 class="h4 mb-4">Trip Highlights</h2>
+                        <h2 class="h3 mb-4 text-primary">Trip Gallery</h2>
+                        <div class="row g-3">
+                            {% for image in trip.images.all %}
+                            <div class="col-md-4">
+                                <a href="{{ image.image.url }}" data-lightbox="trip-gallery" data-title="{{ image.alt_text }}">
+                                    <img src="{{ image.image.url }}" alt="{{ image.alt_text }}" class="img-fluid rounded hover-scale">
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Trip Highlights -->
+                {% if trip.highlights %}
+                <div class="card shadow-sm mb-4" data-aos="fade-up">
+                    <div class="card-body">
+                        <h2 class="h3 mb-4 text-primary">Trip Highlights</h2>
                         <div class="highlights">
                             {{ trip.highlights|safe }}
                         </div>
@@ -65,35 +88,14 @@
                 </div>
                 {% endif %}
 
-                <!-- Itinerary -->
+                <!-- Trip Itinerary -->
                 {% if trip.itinerary %}
-                <div class="card shadow-sm mb-4">
+                <div class="card shadow-sm mb-4" data-aos="fade-up">
                     <div class="card-body">
-                        <h2 class="h4 mb-4">Itinerary</h2>
+                        <h2 class="h3 mb-4 text-primary">Trip Itinerary</h2>
                         <div class="itinerary">
                             {{ trip.itinerary|safe }}
                         </div>
-                    </div>
-                </div>
-                {% endif %}
-
-                <!-- Included/Excluded -->
-                {% if trip.included or trip.not_included %}
-                <div class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        {% if trip.included %}
-                        <h2 class="h4 mb-4">What's Included</h2>
-                        <div class="included mb-4">
-                            {{ trip.included|safe }}
-                        </div>
-                        {% endif %}
-                        
-                        {% if trip.not_included %}
-                        <h2 class="h4 mb-4">What's Not Included</h2>
-                        <div class="not-included">
-                            {{ trip.not_included|safe }}
-                        </div>
-                        {% endif %}
                     </div>
                 </div>
                 {% endif %}
@@ -102,41 +104,76 @@
             <!-- Sidebar -->
             <div class="col-lg-4">
                 <!-- Booking Card -->
-                <div class="card shadow-sm mb-4 sticky-top" style="top: 2rem;">
+                <div class="card shadow-sm sticky-top" style="top: 100px;" data-aos="fade-left">
                     <div class="card-body">
-                        <h3 class="h5 mb-4">Book This Trip</h3>
-                        <div class="price-box mb-4">
-                            <span class="h2 text-primary fw-bold">{{ trip.price }} MAD</span>
-                            <span class="text-muted">/ person</span>
+                        <h3 class="h4 mb-4 text-primary">Book This Trip</h3>
+                        
+                        <!-- Price Display -->
+                        <div class="price-box mb-4 text-center p-4 bg-light rounded-3">
+                            {% if trip.original_price and trip.discount %}
+                            <div class="mb-2">
+                                <span class="text-decoration-line-through text-muted h5">{{ trip.original_price }} MAD</span>
+                                <span class="badge bg-danger ms-2">-{{ trip.discount }}%</span>
+                            </div>
+                            {% endif %}
+                            <div class="current-price">
+                                <span class="h2 text-primary fw-bold">{{ trip.price }} MAD</span>
+                                <span class="text-muted">/person</span>
+                            </div>
                         </div>
                         
+                        <!-- Booking Form -->
                         <form method="post" action="{% url 'trips:submit-inquiry' %}" class="booking-form">
                             {% csrf_token %}
                             <input type="hidden" name="destination" value="{{ trip.id }}">
                             
                             <div class="mb-3">
-                                <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                                <div class="form-floating">
+                                    <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+                                    <label for="name">Your Name</label>
+                                </div>
                             </div>
                             
                             <div class="mb-3">
-                                <input type="email" name="email" class="form-control" placeholder="Your Email" required>
+                                <div class="form-floating">
+                                    <input type="email" name="email" class="form-control" id="email" placeholder="Your Email" required>
+                                    <label for="email">Your Email</label>
+                                </div>
                             </div>
                             
                             <div class="mb-3">
-                                <input type="tel" name="phone" class="form-control" placeholder="Your Phone">
+                                <div class="form-floating">
+                                    <input type="tel" name="phone" class="form-control" id="phone" placeholder="Your Phone">
+                                    <label for="phone">Your Phone (Optional)</label>
+                                </div>
                             </div>
                             
-                            <div class="mb-3">
-                                <textarea name="message" class="form-control" rows="4" placeholder="Your Message"></textarea>
+                            <div class="mb-4">
+                                <div class="form-floating">
+                                    <textarea name="message" class="form-control" id="message" style="height: 100px" placeholder="Your Message"></textarea>
+                                    <label for="message">Your Message (Optional)</label>
+                                </div>
                             </div>
                             
-                            <button type="submit" class="btn btn-primary w-100">Book Now</button>
+                            <button type="submit" class="btn btn-primary w-100 py-3 mb-4">
+                                <i class="fas fa-paper-plane me-2"></i>Book Now
+                            </button>
                         </form>
                         
-                        <div class="mt-4">
-                            <p class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Instant Confirmation</p>
-                            <p class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>24/7 Customer Support</p>
-                            <p class="mb-0"><i class="fas fa-check-circle text-success me-2"></i>Free Cancellation</p>
+                        <!-- Trust Indicators -->
+                        <div class="trust-indicators">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-check-circle text-success me-3 fa-lg"></i>
+                                <span>Instant Confirmation</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-headset text-success me-3 fa-lg"></i>
+                                <span>24/7 Customer Support</span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-shield-alt text-success me-3 fa-lg"></i>
+                                <span>Secure Payment</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -145,18 +182,36 @@
 
         <!-- Related Trips -->
         {% if related_trips %}
-        <section class="related-trips py-5">
-            <h2 class="h3 mb-4">Similar Trips You Might Like</h2>
-            <div class="row">
+        <section class="related-trips mt-5" data-aos="fade-up">
+            <h2 class="h3 mb-4 text-primary">Similar Trips You Might Like</h2>
+            <div class="row g-4">
                 {% for related_trip in related_trips %}
-                <div class="col-md-4 mb-4">
+                <div class="col-lg-4 col-md-6">
                     <div class="card h-100 shadow-sm hover-card">
-                        <img src="{{ related_trip.image.url }}" class="card-img-top" alt="{{ related_trip.title }}" style="height: 200px; object-fit: cover;">
+                        <img src="{{ related_trip.images.first.image.url }}" class="card-img-top" alt="{{ related_trip.title }}" style="height: 240px; object-fit: cover;">
                         <div class="card-body">
-                            <h3 class="h5 card-title">{{ related_trip.title }}</h3>
-                            <p class="text-muted mb-3">{{ related_trip.duration }}</p>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary">{{ related_trip.get_trip_type_display }}</span>
+                                <div class="rating">
+                                    <i class="fas fa-star text-warning"></i>
+                                    <span>{{ related_trip.rating }}</span>
+                                </div>
+                            </div>
+                            <h3 class="h5 card-title mb-3">{{ related_trip.title }}</h3>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-clock text-primary me-2"></i>
+                                    <span>{{ related_trip.duration }} Days</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-users text-primary me-2"></i>
+                                    <span>Max {{ related_trip.max_group_size }}</span>
+                                </div>
+                            </div>
                             <div class="d-flex justify-content-between align-items-center">
-                                <span class="h5 mb-0 text-primary">{{ related_trip.price }} MAD</span>
+                                <div class="price">
+                                    <span class="h5 text-primary mb-0">{{ related_trip.price }} MAD</span>
+                                </div>
                                 <a href="{{ related_trip.get_absolute_url }}" class="btn btn-outline-primary">View Details</a>
                             </div>
                         </div>
@@ -171,24 +226,89 @@
 {% endblock %}
 
 {% block extra_css %}
+<link href="{% static 'vendor/lightbox/css/lightbox.min.css' %}" rel="stylesheet">
 <style>
-    .sticky-top {
-        z-index: 1020;
+    .hero-section {
+        position: relative;
+        margin-top: -76px;
     }
-    .hover-card {
+    
+    .hero-scroll-down {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateX(-50%) translateY(0);
+        }
+        40% {
+            transform: translateX(-50%) translateY(-30px);
+        }
+        60% {
+            transform: translateX(-50%) translateY(-15px);
+        }
+    }
+    
+    .hover-scale {
         transition: transform 0.3s ease;
     }
+    
+    .hover-scale:hover {
+        transform: scale(1.05);
+    }
+    
+    .hover-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
     .hover-card:hover {
         transform: translateY(-5px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
     }
+    
     .price-box {
-        padding: 1rem;
-        background-color: #f8f9fa;
-        border-radius: 0.5rem;
-        text-align: center;
+        background: linear-gradient(45deg, var(--accent-color), white);
     }
+    
+    .trust-indicators {
+        border-top: 1px solid #dee2e6;
+        padding-top: 1.5rem;
+    }
+    
     .breadcrumb-item + .breadcrumb-item::before {
         color: white;
     }
+    
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        color: var(--primary-color);
+    }
+    
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(193, 155, 118, 0.25);
+    }
 </style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'vendor/lightbox/js/lightbox.min.js' %}"></script>
+<script>
+    lightbox.option({
+        'resizeDuration': 200,
+        'wrapAround': true,
+        'showImageNumberLabel': false
+    });
+    
+    document.querySelector('.hero-scroll-down').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector('#trip-details').scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+</script>
 {% endblock %}
