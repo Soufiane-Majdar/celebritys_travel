@@ -36,9 +36,9 @@ def trip_category(request, trip_type):
     
     context = {
         'page_obj': page_obj,
-        'trip_type': trip_type,
+        'category': trip_type,
     }
-    return render(request, 'trips/trip_category.html', context)
+    return render(request, 'trips/trip_list.html', context)
 
 def submit_inquiry(request):
     if request.method == 'POST':

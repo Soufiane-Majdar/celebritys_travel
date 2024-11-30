@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Celebrity's Travel - Moroccan Travel Agency{% endblock %}</title>
+    <title>{% block title %}Celebrity's Travel - Your Premier Moroccan Travel Agency{% endblock %}</title>
     
     <!-- Meta tags for SEO -->
     <meta name="description" content="{% block meta_description %}Celebrity's Travel - Your premier travel agency in Morocco offering luxury tours, cultural experiences, and Umrah services.{% endblock %}">
@@ -14,25 +14,165 @@
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
     
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+    
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
     <!-- Custom CSS -->
     {% compress css %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% endcompress %}
     
+    <style>
+        :root {
+            --primary-color: #C19B76;
+            --secondary-color: #1B1B1B;
+            --accent-color: #E8DFD8;
+            --text-color: #333333;
+            --light-bg: #F8F9FA;
+            --dark-bg: #2C2C2C;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: darken(var(--primary-color), 10%);
+            border-color: darken(var(--primary-color), 10%);
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            color: var(--secondary-color);
+            padding: 0.5rem 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 0.5rem;
+        }
+        
+        .dropdown-item:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+        
+        .footer {
+            background-color: var(--dark-bg);
+            color: #fff;
+            padding: 4rem 0 0;
+        }
+        
+        .footer-title {
+            color: var(--primary-color);
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-links a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: block;
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .social-links a {
+            color: #fff;
+            font-size: 1.25rem;
+            margin-right: 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .footer-bottom {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 1.5rem 0;
+            margin-top: 4rem;
+        }
+        
+        @media (max-width: 991.98px) {
+            .navbar-collapse {
+                background-color: #fff;
+                padding: 1rem;
+                border-radius: 0.5rem;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                margin-top: 1rem;
+            }
+        }
+    </style>
+    
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" href="{% url 'core:home' %}">
-                <img src="{% static 'img/logo.png' %}" alt="Celebrity's Travel Logo" height="50">
+                Celebrity's Travel
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -40,33 +180,34 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" 
-                           href="{% url 'core:home' %}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" 
-                           href="{% url 'core:about' %}">About</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'core:home' %}">Home</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="tripsDropdown" role="button" 
-                           data-bs-toggle="dropdown">Trips</a>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Destinations
+                        </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'trips:trip-category' 'adventure' %}">Adventure</a></li>
-                            <li><a class="dropdown-item" href="{% url 'trips:trip-category' 'cultural' %}">Cultural</a></li>
-                            <li><a class="dropdown-item" href="{% url 'trips:trip-category' 'nature' %}">Nature</a></li>
+                            <li><a class="dropdown-item" href="{% url 'trips:trip-category' 'cultural' %}">Cultural Tours</a></li>
+                            <li><a class="dropdown-item" href="{% url 'trips:trip-category' 'adventure' %}">Adventure Tours</a></li>
+                            <li><a class="dropdown-item" href="{% url 'trips:trip-category' 'desert' %}">Desert Safari</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'trips:trip-list' %}">All Destinations</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'umrah-services' %}active{% endif %}" 
-                           href="{% url 'trips:umrah-services' %}">Umrah</a>
+                        <a class="nav-link" href="{% url 'trips:umrah-services' %}">Umrah Services</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.app_name == 'blog' %}active{% endif %}" 
-                           href="{% url 'blog:post-list' %}">Blog</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'core:about' %}">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" 
-                           href="{% url 'core:contact' %}">Contact</a>
+                        <a class="nav-link {% if request.resolver_match.app_name == 'blog' %}active{% endif %}" href="{% url 'blog:post-list' %}">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'core:contact' %}">Contact</a>
+                    </li>
+                    <li class="nav-item ms-lg-3">
+                        <a href="{% url 'trips:search' %}" class="btn btn-primary rounded-pill px-4">Book Now</a>
                     </li>
                 </ul>
             </div>
@@ -74,7 +215,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="flex-shrink-0">
+    <main class="flex-shrink-0" style="margin-top: 76px;">
         {% if messages %}
         <div class="container mt-4">
             {% for message in messages %}
@@ -90,47 +231,62 @@
     </main>
 
     <!-- Footer -->
-    <footer class="footer mt-auto py-5 bg-dark text-light">
+    <footer class="footer mt-auto">
         <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h5>Celebrity's Travel</h5>
-                    <p>Your premier travel agency in Morocco offering luxury tours, cultural experiences, and Umrah services.</p>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="footer-title">About Celebrity's Travel</h5>
+                    <p class="mb-4">Your premier travel agency in Morocco offering luxury tours, cultural experiences, and Umrah services. We create unforgettable journeys tailored to your dreams.</p>
                     <div class="social-links">
-                        <a href="#" class="text-light me-3"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-light me-3"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-light me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
-                <div class="col-md-4 mb-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="{% url 'core:about' %}" class="text-light">About Us</a></li>
-                        <li><a href="{% url 'trips:trip-list' %}" class="text-light">Our Trips</a></li>
-                        <li><a href="{% url 'trips:umrah-services' %}" class="text-light">Umrah Services</a></li>
-                        <li><a href="{% url 'core:faqs' %}" class="text-light">FAQs</a></li>
-                    </ul>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <div class="footer-links">
+                        <a href="{% url 'core:about' %}">About Us</a>
+                        <a href="{% url 'trips:trip-list' %}">Our Tours</a>
+                        <a href="{% url 'trips:umrah-services' %}">Umrah Services</a>
+                        <a href="{% url 'blog:post-list' %}">Travel Blog</a>
+                        <a href="{% url 'core:contact' %}">Contact Us</a>
+                    </div>
                 </div>
-                <div class="col-md-4 mb-4">
-                    <h5>Newsletter</h5>
-                    <p>Subscribe to our newsletter for travel tips and exclusive offers!</p>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="footer-title">Popular Destinations</h5>
+                    <div class="footer-links">
+                        <a href="#">Marrakech</a>
+                        <a href="#">Sahara Desert</a>
+                        <a href="#">Fes</a>
+                        <a href="#">Chefchaouen</a>
+                        <a href="#">Casablanca</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="footer-title">Newsletter</h5>
+                    <p class="mb-4">Subscribe to receive exclusive offers and travel tips.</p>
                     <form action="{% url 'core:newsletter-signup' %}" method="post" class="newsletter-form">
                         {% csrf_token %}
-                        <div class="input-group">
+                        <div class="input-group mb-3">
                             <input type="email" name="email" class="form-control" placeholder="Your email" required>
-                            <button type="submit" class="btn btn-primary">Subscribe</button>
+                            <button class="btn btn-primary" type="submit">Subscribe</button>
                         </div>
                     </form>
                 </div>
             </div>
-            <hr class="my-4">
-            <div class="row">
-                <div class="col-md-6 text-center text-md-start">
-                    <p class="mb-0">&copy; {% now "Y" %} Celebrity's Travel. All rights reserved.</p>
-                </div>
-                <div class="col-md-6 text-center text-md-end">
-                    <a href="#" class="text-light me-3">Privacy Policy</a>
-                    <a href="#" class="text-light">Terms of Service</a>
+        </div>
+        <div class="footer-bottom text-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 text-md-start">
+                        <p class="mb-0">&copy; {% now "Y" %} Celebrity's Travel. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <a href="#" class="text-white me-3">Privacy Policy</a>
+                        <a href="#" class="text-white">Terms of Service</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -139,10 +295,25 @@
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Custom JavaScript -->
-    {% compress js %}
-    <script src="{% static 'js/main.js' %}"></script>
-    {% endcompress %}
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init();
+        
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                document.querySelector('.navbar').classList.add('scrolled');
+            } else {
+                document.querySelector('.navbar').classList.remove('scrolled');
+            }
+        });
+    </script>
     
     {% block extra_js %}{% endblock %}
 </body>
