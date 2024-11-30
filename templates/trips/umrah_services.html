@@ -1,0 +1,175 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}خدمات العمرة - Celebrity's Travel{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section position-relative bg-light py-5 arabic-content">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <h1 class="display-4 fw-bold mb-4">خدمات العمرة</h1>
+                <p class="lead text-muted mb-4">تجربة روحانية مع باقات العمرة الشاملة المصممة خصيصاً لتلبية احتياجاتكم</p>
+                <a href="#packages" class="btn btn-primary">استكشف الباقات</a>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block" data-aos="fade-left">
+                <img src="{% static 'images/umrah-hero.jpg' %}" alt="خدمات العمرة" class="img-fluid rounded-3 shadow">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Packages Section -->
+<section id="packages" class="packages-section py-5 arabic-content">
+    <div class="container">
+        <div class="row mb-5 text-center">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-6 fw-bold mb-3">باقات العمرة لدينا</h2>
+                <p class="lead text-muted">اختر من بين مجموعة من الباقات المصممة بعناية لتناسب كل ميزانية وتفضيل</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            {% for package in umrah_packages %}
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1|add:"00" }}">
+                <div class="card package-card h-100 border-0 shadow-sm hover-scale">
+                    <div class="position-relative">
+                        {% if package.image %}
+                        <img src="{{ package.image.url }}" class="card-img-top" alt="{{ package.title }}" style="height: 240px; object-fit: cover;">
+                        {% else %}
+                        <img src="{% static 'images/placeholder.jpg' %}" class="card-img-top" alt="{{ package.title }}" style="height: 240px; object-fit: cover;">
+                        {% endif %}
+                        <div class="position-absolute top-0 end-0 m-3">
+                            <span class="badge bg-success">{{ package.duration }} أيام</span>
+                        </div>
+                    </div>
+                    <div class="card-body text-end">
+                        <h5 class="card-title mb-1">
+                            <a href="{{ package.get_absolute_url }}" class="text-decoration-none text-dark stretched-link">{{ package.title }}</a>
+                        </h5>
+                        <p class="text-muted small mb-3">
+                            <i class="fas fa-map-marker-alt ms-1"></i> {{ package.location }}
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center flex-row-reverse">
+                            <div>
+                                <p class="card-text mb-0">
+                                    <span class="fw-bold text-primary">{{ package.price }} دولار</span>
+                                </p>
+                                <small class="text-muted">للشخص الواحد</small>
+                            </div>
+                            <div class="text-start">
+                                <p class="card-text mb-0">
+                                    <i class="far fa-clock ms-1"></i> {{ package.duration }} أيام
+                                </p>
+                                <small class="text-muted">
+                                    <i class="fas fa-users ms-1"></i> الحد الأقصى {{ package.max_group_size }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us Section -->
+<section class="why-us py-5 bg-light arabic-content">
+    <div class="container">
+        <div class="row mb-5 text-center">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-6 fw-bold mb-3">لماذا تختار خدمات العمرة لدينا</h2>
+                <p class="lead text-muted">نقدم خدمة ودعم استثنائيين طوال رحلتك الروحانية</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4 bg-white rounded-3 shadow-sm h-100">
+                    <div class="feature-icon bg-primary bg-opacity-10 rounded-circle p-3 d-inline-block mb-4">
+                        <i class="fas fa-map-marked-alt fa-2x text-primary"></i>
+                    </div>
+                    <h4 class="mb-3">مرشدون ذوو خبرة</h4>
+                    <p class="text-muted mb-0">يضمن مرشدونا ذوو الخبرة تجربة آمنة وثرية طوال رحلة عمرتك</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4 bg-white rounded-3 shadow-sm h-100">
+                    <div class="feature-icon bg-primary bg-opacity-10 rounded-circle p-3 d-inline-block mb-4">
+                        <i class="fas fa-hand-holding-heart fa-2x text-primary"></i>
+                    </div>
+                    <h4 class="mb-3">خدمة شخصية</h4>
+                    <p class="text-muted mb-0">نقوم بتخصيص خدماتنا لتلبية احتياجاتك وتفضيلاتك الفردية، مما يضمن تجربة لا تُنسى</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4 bg-white rounded-3 shadow-sm h-100">
+                    <div class="feature-icon bg-primary bg-opacity-10 rounded-circle p-3 d-inline-block mb-4">
+                        <i class="fas fa-shield-alt fa-2x text-primary"></i>
+                    </div>
+                    <h4 class="mb-3">دعم شامل</h4>
+                    <p class="text-muted mb-0">نقدم دعماً ومساعدة شاملة، من معالجة التأشيرات إلى ترتيبات الإقامة</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+
+    .arabic-content {
+        font-family: 'Tajawal', sans-serif;
+        direction: rtl;
+        text-align: right;
+    }
+
+    .arabic-content .btn {
+        font-family: 'Tajawal', sans-serif;
+    }
+
+    .hover-scale {
+        transition: transform 0.3s ease;
+    }
+    .hover-scale:hover {
+        transform: translateY(-5px);
+    }
+    .package-card {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .package-card .card-img-top {
+        transition: transform 0.3s ease;
+    }
+    .package-card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* RTL specific adjustments */
+    .arabic-content .fa, 
+    .arabic-content .fas, 
+    .arabic-content .far {
+        margin-left: 5px;
+        margin-right: 0;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize AOS
+    AOS.init({
+        duration: 800,
+        once: true
+    });
+</script>
+{% endblock %}

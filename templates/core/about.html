@@ -5,53 +5,74 @@
 
 {% block content %}
 <!-- About Hero Section -->
-<section class="py-5 bg-light">
+<section class="hero-section position-relative" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{% static 'images/hero-bg.jpg' %}') center/cover no-repeat; height: 60vh;">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-lg-8 text-white text-center mx-auto">
+                <h1 class="display-3 fw-bold mb-4" data-aos="fade-up">About Celebrity's Travel</h1>
+                <p class="lead mb-0" data-aos="fade-up" data-aos-delay="100">Your trusted partner for unforgettable Moroccan adventures and spiritual journeys.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Content Section -->
+<section class="py-5">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-md-6">
-                <h1 class="display-4 mb-4">About Celebrity's Travel</h1>
-                <p class="lead mb-4">Your trusted partner for unforgettable Moroccan adventures and spiritual journeys.</p>
-                <p>At Celebrity's Travel, we believe that travel is more than just visiting new places – it's about creating meaningful connections, experiencing different cultures, and making lasting memories.</p>
-                <blockquote class="blockquote my-4">
-                    <p class="text-primary">"Travel is the only thing you buy that makes you richer."</p>
-                </blockquote>
+            <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
+                <img src="{% static 'images/marrakech.jpg' %}" alt="About Celebrity's Travel" class="img-fluid rounded-3 shadow-lg">
             </div>
-            <div class="col-md-6">
-                <img src="{% static 'img/about-hero.jpg' %}" alt="About Celebrity's Travel" class="img-fluid rounded shadow">
+            <div class="col-lg-6" data-aos="fade-left">
+                <h2 class="display-5 fw-bold mb-4">Our Story</h2>
+                <p class="lead mb-4">At Celebrity's Travel, we believe that travel is more than just visiting new places – it's about creating meaningful connections, experiencing different cultures, and making lasting memories.</p>
+                <blockquote class="blockquote p-4 bg-light rounded-3 border-start border-4 border-primary my-4">
+                    <p class="mb-0" style="color: #C19B76">"Travel is the only thing you buy that makes you richer."</p>
+                </blockquote>
+                <p class="mb-4">With years of experience in Moroccan tourism and Umrah services, we take pride in crafting journeys that blend adventure, culture, and spirituality.</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Our Values Section -->
-<section class="py-5">
+<section class="py-5 bg-light">
     <div class="container">
-        <h2 class="text-center mb-5">Our Values</h2>
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3" data-aos="fade-up">Our Values</h2>
+            <p class="lead text-muted" data-aos="fade-up" data-aos-delay="100">The principles that guide us in delivering exceptional travel experiences</p>
+        </div>
         <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <i class="fas fa-heart fa-3x text-primary mb-3"></i>
-                        <h4>Passion</h4>
-                        <p>We are passionate about creating extraordinary travel experiences that exceed your expectations.</p>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card h-100 border-0 shadow-sm hover-card">
+                    <div class="card-body text-center p-4">
+                        <div class="value-icon mb-4">
+                            <i class="fas fa-heart fa-2x" style="color: #C19B76"></i>
+                        </div>
+                        <h4 class="mb-3">Passion</h4>
+                        <p class="text-muted">We are passionate about creating extraordinary travel experiences that exceed your expectations.</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <i class="fas fa-handshake fa-3x text-primary mb-3"></i>
-                        <h4>Trust</h4>
-                        <p>Building lasting relationships with our clients through transparency and reliability.</p>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card h-100 border-0 shadow-sm hover-card">
+                    <div class="card-body text-center p-4">
+                        <div class="value-icon mb-4">
+                            <i class="fas fa-handshake fa-2x" style="color: #C19B76"></i>
+                        </div>
+                        <h4 class="mb-3">Trust</h4>
+                        <p class="text-muted">Building lasting relationships with our clients through transparency and reliability.</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <i class="fas fa-star fa-3x text-primary mb-3"></i>
-                        <h4>Excellence</h4>
-                        <p>Committed to delivering the highest quality service in every aspect of your journey.</p>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="card h-100 border-0 shadow-sm hover-card">
+                    <div class="card-body text-center p-4">
+                        <div class="value-icon mb-4">
+                            <i class="fas fa-star fa-2x" style="color: #C19B76"></i>
+                        </div>
+                        <h4 class="mb-3">Excellence</h4>
+                        <p class="text-muted">Committed to delivering the highest quality service in every aspect of your journey.</p>
                     </div>
                 </div>
             </div>
@@ -60,25 +81,34 @@
 </section>
 
 <!-- Testimonials Section -->
-<section class="py-5 bg-light">
+<section class="py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('{% static 'images/sahara.jpg' %}') center/cover fixed;">
     <div class="container">
-        <h2 class="text-center mb-5">What Our Clients Say</h2>
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold text-white mb-3" data-aos="fade-up">What Our Clients Say</h2>
+            <p class="lead text-white-50" data-aos="fade-up" data-aos-delay="100">Hear from those who've experienced our services</p>
+        </div>
         <div class="row">
             {% for testimonial in testimonials %}
-            <div class="col-md-4 mb-4">
-                <div class="testimonial-card">
-                    {% if testimonial.image %}
-                    <img src="{{ testimonial.image.url }}" alt="{{ testimonial.name }}" class="testimonial-image mb-3">
-                    {% endif %}
-                    <p class="mb-3">{{ testimonial.content }}</p>
-                    <h5 class="mb-1">{{ testimonial.name }}</h5>
-                    {% if testimonial.role %}
-                    <p class="text-muted">{{ testimonial.role }}</p>
-                    {% endif %}
-                    <div class="rating">
-                        {% for i in "12345"|make_list %}
-                        <i class="fas fa-star {% if forloop.counter <= testimonial.rating %}text-warning{% else %}text-muted{% endif %}"></i>
-                        {% endfor %}
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1|add:"00" }}">
+                <div class="card testimonial-card border-0 shadow h-100">
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            {% for i in "12345"|make_list %}
+                            <i class="fas fa-star {% if forloop.counter <= testimonial.rating %}text-warning{% else %}text-muted{% endif %}"></i>
+                            {% endfor %}
+                        </div>
+                        <p class="mb-4">{{ testimonial.content }}</p>
+                        <div class="d-flex align-items-center">
+                            {% if testimonial.image %}
+                            <img src="{{ testimonial.image.url }}" alt="{{ testimonial.name }}" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                            {% endif %}
+                            <div>
+                                <h5 class="mb-1">{{ testimonial.name }}</h5>
+                                {% if testimonial.role %}
+                                <p class="text-muted small mb-0">{{ testimonial.role }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -88,11 +118,65 @@
 </section>
 
 <!-- Call to Action -->
-<section class="py-5 bg-primary text-white">
+<section class="py-5" style="background-color: #C19B76;">
     <div class="container text-center">
-        <h2 class="mb-4">Ready to Start Your Journey?</h2>
-        <p class="lead mb-4">Let us help you create the perfect Moroccan experience.</p>
-        <a href="{% url 'core:contact' %}" class="btn btn-light btn-lg">Contact Us Today</a>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="display-5 fw-bold text-white mb-4" data-aos="fade-up">Ready to Start Your Journey?</h2>
+                <p class="lead text-white-50 mb-4" data-aos="fade-up" data-aos-delay="100">Let us help you create the perfect Moroccan experience.</p>
+                <a href="{% url 'core:contact' %}" class="btn btn-light btn-lg px-5" data-aos="fade-up" data-aos-delay="200">
+                    Contact Us Today
+                    <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.hero-section {
+    position: relative;
+    background-attachment: fixed;
+}
+
+.value-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(193, 155, 118, 0.1);
+    border-radius: 50%;
+}
+
+.hover-card {
+    transition: transform 0.3s ease;
+    border-radius: 15px;
+}
+
+.hover-card:hover {
+    transform: translateY(-10px);
+}
+
+.testimonial-card {
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.blockquote {
+    font-style: italic;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    AOS.init({
+        duration: 800,
+        once: true
+    });
+</script>
 {% endblock %}

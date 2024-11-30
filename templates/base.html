@@ -1,0 +1,220 @@
+{% load static %}
+{% load compress %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Celebrity's Travel - Moroccan Travel Agency{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    {% compress css %}
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="{% static 'vendor/fontawesome/css/all.min.css' %}" rel="stylesheet">
+    <!-- AOS -->
+    <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    {% endcompress %}
+    
+    <!-- Custom page CSS -->
+    {% block extra_css %}{% endblock %}
+    
+    <style>
+        :root {
+            --primary-color: #C19B76;
+            --secondary-color: #1B1B1B;
+            --accent-color: #E8DFD8;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .arabic {
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .text-primary {
+            color: var(--primary-color) !important;
+        }
+        
+        .bg-primary {
+            background-color: var(--primary-color) !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+            <div class="container">
+                <!-- Logo -->
+                <a class="navbar-brand" href="{% url 'core:home' %}">
+                    <img src="{% static 'images/logo.png' %}" alt="Celebrity's Travel" height="50">
+                </a>
+                
+                <!-- Mobile Toggle -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <!-- Navigation -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'core:home' %}">Home</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                Trips
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'trips:trip-category' 'cultural' %}">Cultural Tours</a></li>
+                                <li><a class="dropdown-item" href="{% url 'trips:trip-category' 'adventure' %}">Adventure Tours</a></li>
+                                <li><a class="dropdown-item" href="{% url 'trips:trip-category' 'desert' %}">Desert Tours</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == '/umrah/' %}active{% endif %}" href="{% url 'trips:umrah-services' %}">Umrah</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == '/blog/' %}active{% endif %}" href="{% url 'blog:post-list' %}">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == '/about/' %}active{% endif %}" href="{% url 'core:about' %}">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == '/contact/' %}active{% endif %}" href="{% url 'core:contact' %}">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content" style="margin-top: 76px;">
+        {% if messages %}
+        <div class="container mt-4">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer bg-light mt-5 py-5">
+        <div class="container">
+            <div class="row">
+                <!-- Company Info -->
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <img src="{% static 'images/logo.png' %}" alt="Celebrity's Travel" height="50" class="mb-4">
+                    <p>Your trusted partner for unforgettable Moroccan adventures and spiritual journeys.</p>
+                    <div class="social-links">
+                        <a href="#" class="me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div class="col-lg-2 mb-4 mb-lg-0">
+                    <h5 class="mb-4">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="{% url 'core:home' %}" class="text-dark text-decoration-none">Home</a></li>
+                        <li class="mb-2"><a href="{% url 'core:about' %}" class="text-dark text-decoration-none">About Us</a></li>
+                        <li class="mb-2"><a href="{% url 'trips:trip-list' %}" class="text-dark text-decoration-none">Our Tours</a></li>
+                        <li class="mb-2"><a href="{% url 'blog:post-list' %}" class="text-dark text-decoration-none">Blog</a></li>
+                        <li><a href="{% url 'core:contact' %}" class="text-dark text-decoration-none">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Tours -->
+                <div class="col-lg-3 mb-4 mb-lg-0">
+                    <h5 class="mb-4">Our Tours</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="{% url 'trips:trip-category' 'cultural' %}" class="text-dark text-decoration-none">Cultural Tours</a></li>
+                        <li class="mb-2"><a href="{% url 'trips:trip-category' 'adventure' %}" class="text-dark text-decoration-none">Adventure Tours</a></li>
+                        <li class="mb-2"><a href="{% url 'trips:trip-category' 'desert' %}" class="text-dark text-decoration-none">Desert Tours</a></li>
+                        <li><a href="{% url 'trips:umrah-services' %}" class="text-dark text-decoration-none">Umrah Services</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact Info -->
+                <div class="col-lg-3">
+                    <h5 class="mb-4">Contact Us</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2 text-primary"></i> Kenitra, Morocco</li>
+                        <li class="mb-2"><i class="fas fa-phone me-2 text-primary"></i> +212 123 456 789</li>
+                        <li class="mb-2"><i class="fas fa-envelope me-2 text-primary"></i> contact@celebritystravel.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Copyright -->
+            <div class="border-top pt-4 mt-4">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-center text-md-start">
+                        <p class="mb-0">&copy; {% now "Y" %} Celebrity's Travel. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <a href="#" class="text-dark text-decoration-none me-3">Privacy Policy</a>
+                        <a href="#" class="text-dark text-decoration-none">Terms & Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    {% compress js %}
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <!-- AOS -->
+    <script src="{% static 'vendor/aos/aos.js' %}"></script>
+    <!-- Custom JS -->
+    <script src="{% static 'js/main.js' %}"></script>
+    {% endcompress %}
+    
+    <!-- Initialize AOS -->
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+    </script>
+    
+    <!-- Custom page JavaScript -->
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

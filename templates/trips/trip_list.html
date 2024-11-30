@@ -1,217 +1,200 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-{% block title %}{% if query or category %}Search Results{% else %}All Trips{% endif %} - Celebrity's Travel{% endblock %}
+{% block title %}{{ category|title|default:"All Trips" }} - Celebrity's Travel{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero position-relative vh-60 d-flex align-items-center" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{% static 'img/morocco-hero.jpg' %}') no-repeat center/cover;">
-    <div class="container text-center text-white">
-        <h1 class="display-3 fw-bold mb-4" data-aos="fade-up">
-            {% if query and category %}
-                {{ category|title }} Tours in {{ query|title }}
-            {% elif query %}
-                Tours in {{ query|title }}
-            {% elif category %}
-                {{ category|title }} Tours
-            {% else %}
-                Discover Morocco
-            {% endif %}
-        </h1>
-        <p class="lead mb-5" data-aos="fade-up" data-aos-delay="100">Experience the magic of Morocco with our handcrafted tours</p>
-        
-        <!-- Search Form -->
-        <div class="search-form bg-white p-4 rounded-4 shadow-lg mx-auto" style="max-width: 900px;" data-aos="fade-up" data-aos-delay="200">
-            <form action="{% url 'trips:search' %}" method="get" class="row g-3">
-                <div class="col-md-5">
-                    <div class="form-floating">
-                        <select name="category" class="form-select" id="categorySelect">
-                            <option value="">All Categories</option>
-                            <option value="cultural" {% if category == 'cultural' %}selected{% endif %}>Cultural Tours</option>
-                            <option value="adventure" {% if category == 'adventure' %}selected{% endif %}>Adventure Tours</option>
-                            <option value="desert" {% if category == 'desert' %}selected{% endif %}>Desert Safari</option>
-                            <option value="umrah" {% if category == 'umrah' %}selected{% endif %}>Umrah Services</option>
-                        </select>
-                        <label for="categorySelect">Tour Category</label>
-                    </div>
+<section class="hero-section position-relative bg-light py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <h1 class="display-4 fw-bold mb-4">{{ category|title|default:"Discover Morocco" }}</h1>
+                <p class="lead text-muted mb-4">Experience the magic of Morocco with our carefully curated trips. From ancient medinas to vast deserts, create memories that last a lifetime.</p>
+                <div class="search-box bg-white p-4 rounded-3 shadow-sm">
+                    <form action="{% url 'trips:search' %}" method="get" class="row g-2">
+                        <div class="col-md-5">
+                            <label class="form-label small text-muted">Destination</label>
+                            <input type="text" name="q" class="form-control" placeholder="Where do you want to go?" value="{{ request.GET.q }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small text-muted">Trip Type</label>
+                            <select name="type" class="form-select">
+                                <option value="">All Types</option>
+                                <option value="adventure" {% if request.GET.type == 'adventure' %}selected{% endif %}>Adventure</option>
+                                <option value="cultural" {% if request.GET.type == 'cultural' %}selected{% endif %}>Cultural</option>
+                                <option value="desert" {% if request.GET.type == 'desert' %}selected{% endif %}>Desert Safari</option>
+                                <option value="umrah" {% if request.GET.type == 'umrah' %}selected{% endif %}>Umrah</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small text-muted">&nbsp;</label>
+                            <button type="submit" class="btn btn-primary w-100">Search</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="col-md-5">
-                    <div class="form-floating">
-                        <input type="text" name="location" class="form-control" id="locationInput" placeholder="Destination" value="{{ query }}">
-                        <label for="locationInput">Destination</label>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary h-100 w-100 d-flex align-items-center justify-content-center">
-                        <i class="fas fa-search me-2"></i> Search
-                    </button>
-                </div>
-            </form>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block" data-aos="fade-left">
+                {% if category %}
+                <img src="{% static 'images/'|add:category|add:'-hero.jpg' %}" alt="Morocco Travel" class="img-fluid rounded-3 shadow">
+                {% else %}
+                <img src="{% static 'images/hero-image.jpg' %}" alt="Morocco Travel" class="img-fluid rounded-3 shadow">
+                {% endif %}
+            </div>
         </div>
     </div>
 </section>
 
-<!-- Filter Section -->
-<section class="py-4 bg-light">
+<!-- Filters Section -->
+<section class="filters-section py-4 bg-white border-bottom">
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="{% url 'core:home' %}" class="text-decoration-none">Home</a></li>
-                        <li class="breadcrumb-item active">Tours</li>
-                        {% if category %}
-                        <li class="breadcrumb-item active">{{ category|title }}</li>
-                        {% endif %}
-                    </ol>
-                </nav>
+        <div class="d-flex flex-wrap align-items-center gap-3">
+            <div class="me-auto">
+                <h6 class="mb-0 text-muted">{{ page_obj.paginator.count }} trips found</h6>
             </div>
-            <div class="col-md-6 text-md-end">
-                <div class="d-flex justify-content-md-end align-items-center">
-                    <span class="me-3 text-muted">Sort by:</span>
-                    <select class="form-select form-select-sm" style="width: auto;">
-                        <option>Price: Low to High</option>
-                        <option>Price: High to Low</option>
-                        <option>Duration: Short to Long</option>
-                        <option>Duration: Long to Short</option>
-                    </select>
-                </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline-secondary active">
+                    <i class="fas fa-th-large"></i>
+                </button>
+                <button type="button" class="btn btn-outline-secondary">
+                    <i class="fas fa-list"></i>
+                </button>
             </div>
+            <select class="form-select" style="width: auto;">
+                <option>Sort by: Popular</option>
+                <option>Price: Low to High</option>
+                <option>Price: High to Low</option>
+                <option>Duration: Short to Long</option>
+            </select>
         </div>
     </div>
 </section>
 
 <!-- Trips Grid -->
-<section class="py-5">
+<section class="trips-grid py-5">
     <div class="container">
         <div class="row g-4">
             {% for trip in page_obj %}
             <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1|add:"00" }}">
-                <div class="card trip-card h-100 border-0 shadow-sm overflow-hidden">
+                <div class="card trip-card h-100 border-0 shadow-sm hover-scale">
                     <div class="position-relative">
                         {% if trip.images.first %}
-                        <img src="{{ trip.images.first.image.url }}" class="card-img-top" alt="{{ trip.title }}" style="height: 280px; object-fit: cover;">
+                        <img src="{{ trip.images.first.image.url }}" class="card-img-top" alt="{{ trip.title }}" style="height: 240px; object-fit: cover;">
                         {% else %}
-                        <img src="{% static 'img/placeholder.jpg' %}" class="card-img-top" alt="{{ trip.title }}" style="height: 280px; object-fit: cover;">
-                        {% endif %}
-                        <div class="trip-overlay">
-                            <div class="d-flex flex-column align-items-center">
-                                <a href="{{ trip.get_absolute_url }}" class="btn btn-light mb-2">View Details</a>
-                                <a href="#" class="btn btn-outline-light">Quick Book</a>
-                            </div>
-                        </div>
-                        {% if trip.featured %}
-                        <div class="position-absolute top-0 start-0 bg-primary text-white px-3 py-2 m-3 rounded-pill">
-                            <i class="fas fa-star me-1"></i> Featured
-                        </div>
+                        <img src="{% static 'images/placeholder.jpg' %}" class="card-img-top" alt="{{ trip.title }}" style="height: 240px; object-fit: cover;">
                         {% endif %}
                         {% if trip.discount %}
-                        <div class="position-absolute top-0 end-0 bg-danger text-white px-3 py-2 m-3 rounded-pill">
-                            {{ trip.discount }}% OFF
+                        <div class="position-absolute top-0 start-0 m-3">
+                            <span class="badge bg-danger">-{{ trip.discount }}%</span>
                         </div>
                         {% endif %}
+                        <div class="position-absolute top-0 end-0 m-3">
+                            <button class="btn btn-light btn-sm rounded-circle shadow-sm" title="Add to favorites">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="badge bg-primary rounded-pill">
-                                <i class="far fa-clock me-1"></i> {{ trip.duration }} Days
+                            <span class="badge bg-{{ trip.get_trip_type_display|lower }}-subtle text-{{ trip.get_trip_type_display|lower }}">
+                                {{ trip.get_trip_type_display }}
                             </span>
-                            <div class="trip-rating">
+                            <div class="rating-stars">
+                                {% if trip.rating %}
                                 <i class="fas fa-star text-warning"></i>
-                                <span class="ms-1">{{ trip.rating|default:"4.5" }}</span>
-                            </div>
-                        </div>
-                        <h5 class="card-title mb-3">{{ trip.title }}</h5>
-                        <div class="mb-3">
-                            <div class="d-flex align-items-center text-muted small mb-2">
-                                <i class="fas fa-map-marker-alt me-2"></i>
-                                {{ trip.location }}
-                            </div>
-                            <div class="d-flex align-items-center text-muted small">
-                                <i class="fas fa-users me-2"></i>
-                                Max {{ trip.max_group_size }} people
-                            </div>
-                        </div>
-                        <p class="card-text text-muted small mb-3">{{ trip.description|truncatewords:15 }}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="trip-price">
-                                <span class="h5 text-primary mb-0">${{ trip.price }}</span>
-                                {% if trip.discount %}
-                                <small class="text-decoration-line-through text-muted ms-2">${{ trip.original_price }}</small>
+                                <span class="ms-1">{{ trip.rating }}</span>
                                 {% endif %}
-                                <small class="d-block text-muted">per person</small>
                             </div>
-                            <a href="{{ trip.get_absolute_url }}" class="btn btn-outline-primary btn-sm">
-                                Learn More
-                            </a>
+                        </div>
+                        <h5 class="card-title mb-1">
+                            <a href="{{ trip.get_absolute_url }}" class="text-decoration-none text-dark stretched-link">{{ trip.title }}</a>
+                        </h5>
+                        <p class="text-muted small mb-3">
+                            <i class="fas fa-map-marker-alt me-1"></i> {{ trip.location }}
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="card-text mb-0">
+                                    {% if trip.original_price %}
+                                    <small class="text-decoration-line-through text-muted">{{ trip.original_price }} MAD</small>
+                                    {% endif %}
+                                    <span class="fw-bold text-primary">{{ trip.price }} MAD</span>
+                                </p>
+                                <small class="text-muted">per person</small>
+                            </div>
+                            <div class="text-end">
+                                <p class="card-text mb-0">
+                                    <i class="far fa-clock me-1"></i> {{ trip.duration }} days
+                                </p>
+                                <small class="text-muted">
+                                    <i class="fas fa-users me-1"></i> Max {{ trip.max_group_size }}
+                                </small>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             {% empty %}
             <div class="col-12 text-center py-5">
-                <div class="no-results">
-                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
-                    <h3>No Tours Found</h3>
-                    <p class="text-muted">We couldn't find any tours matching your criteria.</p>
-                    <a href="{% url 'trips:trip-list' %}" class="btn btn-primary mt-3">View All Tours</a>
+                <div class="empty-state">
+                    <img src="{% static 'images/empty-state.svg' %}" alt="No trips found" class="mb-4" style="max-width: 200px;">
+                    <h3>No trips found</h3>
+                    <p class="text-muted">Try adjusting your search criteria or browse our other amazing destinations.</p>
+                    <a href="{% url 'trips:trip-list' %}" class="btn btn-primary">View All Trips</a>
                 </div>
             </div>
             {% endfor %}
         </div>
-        
-        <!-- Pagination -->
-        {% if page_obj.has_other_pages %}
-        <nav class="mt-5" aria-label="Trip pagination">
-            <ul class="pagination justify-content-center">
-                {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&location={{ query }}{% endif %}{% if category %}&category={{ category }}{% endif %}" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                {% endif %}
-                
-                {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
-                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ num }}{% if query %}&location={{ query }}{% endif %}{% if category %}&category={{ category }}{% endif %}">{{ num }}</a>
-                </li>
-                {% endif %}
-                {% endfor %}
-                
-                {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&location={{ query }}{% endif %}{% if category %}&category={{ category }}{% endif %}" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-                {% endif %}
-            </ul>
-        </nav>
+
+        {% if page_obj.paginator.num_pages > 1 %}
+        <div class="pagination-wrapper text-center mt-5">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}">
+                            {{ num }}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
         {% endif %}
     </div>
 </section>
 
-<!-- Newsletter -->
-<section class="newsletter-section py-5" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('{% static 'img/morocco-pattern.jpg' %}') no-repeat center/cover;">
+<!-- Newsletter Section -->
+<section class="newsletter-section py-5 bg-light">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 text-center text-white">
-                <h2 class="mb-4">Get Exclusive Travel Offers</h2>
-                <p class="lead mb-4">Subscribe to our newsletter and receive special offers on our tours!</p>
-                <form action="{% url 'core:newsletter-signup' %}" method="post" class="row g-2 justify-content-center">
-                    {% csrf_token %}
-                    <div class="col-md-8">
-                        <div class="form-floating">
-                            <input type="email" name="email" class="form-control form-control-lg bg-white bg-opacity-90" id="newsletterEmail" placeholder="Enter your email" required>
-                            <label for="newsletterEmail" class="text-dark">Enter your email</label>
-                        </div>
-                    </div>
-                    <div class="col-md-auto">
-                        <button type="submit" class="btn btn-primary btn-lg h-100">Subscribe Now</button>
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-6">
+                <h3 class="mb-4">Get Travel Updates</h3>
+                <p class="text-muted mb-4">Subscribe to our newsletter and never miss our special offers!</p>
+                <form class="newsletter-form">
+                    <div class="input-group">
+                        <input type="email" class="form-control" placeholder="Enter your email">
+                        <button class="btn btn-primary" type="submit">Subscribe</button>
                     </div>
                 </form>
             </div>
@@ -222,68 +205,97 @@
 
 {% block extra_css %}
 <style>
-.vh-60 {
-    height: 60vh;
-    min-height: 500px;
-}
-
-.trip-card {
-    transition: all 0.3s ease;
-}
-
-.trip-card:hover {
-    transform: translateY(-5px);
-}
-
-.trip-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.trip-card:hover .trip-overlay {
-    opacity: 1;
-}
-
-.search-form {
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(10px);
-}
-
-.form-floating > .form-control,
-.form-floating > .form-select {
-    height: calc(3.5rem + 2px);
-    line-height: 1.25;
-}
-
-.form-floating > label {
-    padding: 1rem 0.75rem;
-}
-
-.btn-primary {
-    padding: 0.8rem 1.5rem;
-}
-
-.newsletter-section {
-    background-attachment: fixed;
-}
-
-@media (max-width: 768px) {
-    .search-form {
-        margin: 0 15px;
+    .hover-scale {
+        transition: transform 0.3s ease;
     }
-    
-    .vh-60 {
-        height: 70vh;
+    .hover-scale:hover {
+        transform: translateY(-5px);
     }
-}
+    .trip-card {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .trip-card .card-img-top {
+        transition: transform 0.3s ease;
+    }
+    .trip-card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+    .search-box {
+        border-radius: 16px;
+    }
+    .form-control, .form-select {
+        border-radius: 8px;
+        border-color: #e0e0e0;
+    }
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 0.25rem rgba(193, 155, 118, 0.25);
+        border-color: #C19B76;
+    }
+    .btn-primary {
+        background-color: #C19B76;
+        border-color: #C19B76;
+        border-radius: 8px;
+    }
+    .btn-primary:hover {
+        background-color: #ab855f;
+        border-color: #ab855f;
+    }
+    .badge {
+        padding: 0.5em 1em;
+        font-weight: 500;
+    }
+    .pagination .page-link {
+        color: #C19B76;
+        border-color: #e0e0e0;
+    }
+    .pagination .page-item.active .page-link {
+        background-color: #C19B76;
+        border-color: #C19B76;
+        color: white;
+    }
+    .newsletter-section {
+        background-color: #f8f9fa;
+    }
+    .empty-state {
+        padding: 3rem;
+    }
+    .bg-adventure-subtle { background-color: #e8f4ff; }
+    .bg-cultural-subtle { background-color: #fff4e6; }
+    .bg-desert-subtle { background-color: #fff9e6; }
+    .bg-umrah-subtle { background-color: #e6f9f6; }
+    .text-adventure { color: #0066cc; }
+    .text-cultural { color: #ff8c00; }
+    .text-desert { color: #cc9900; }
+    .text-umrah { color: #00997a; }
 </style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize AOS
+    AOS.init({
+        duration: 800,
+        once: true
+    });
+
+    // Add smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // Add favorite functionality
+    document.querySelectorAll('.btn-favorite').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            this.querySelector('i').classList.toggle('far');
+            this.querySelector('i').classList.toggle('fas');
+        });
+    });
+</script>
 {% endblock %}

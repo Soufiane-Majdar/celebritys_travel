@@ -1,30 +1,22 @@
 {% extends 'base/base.html' %}
 {% load static %}
-{% load crispy_forms_tags %}
 
-{% block title %}Celebrity's Travel - Your Premier Moroccan Travel Agency{% endblock %}
+{% block title %}Celebrity's Travel - Discover Morocco{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero vh-100 position-relative d-flex align-items-center">
-    <div class="hero-video position-absolute w-100 h-100">
-        <video autoplay muted loop class="w-100 h-100 object-fit-cover">
-            <source src="{% static 'video/morocco-hero.mp4' %}" type="video/mp4">
-        </video>
-        <div class="overlay position-absolute w-100 h-100 bg-dark opacity-50"></div>
-    </div>
-    <div class="container position-relative">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 text-center text-white">
-                <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInUp">Discover the Magic of Morocco</h1>
-                <p class="lead mb-5 animate__animated animate__fadeInUp animate__delay-1s">Experience authentic Moroccan culture, breathtaking landscapes, and unforgettable adventures</p>
-                
-                <!-- Search Form -->
-                <div class="search-form bg-white p-4 rounded-3 shadow-lg animate__animated animate__fadeInUp animate__delay-2s">
-                    <form action="{% url 'trips:search' %}" method="get" class="row g-3">
-                        <div class="col-md-4">
-                            <select name="category" class="form-select form-select-lg">
-                                <option value="">Select Experience</option>
+<section class="hero-section position-relative bg-light py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <h1 class="display-4 fw-bold mb-4">Discover the Magic of Morocco</h1>
+                <p class="lead text-muted mb-4">Experience authentic Moroccan culture, breathtaking landscapes, and unforgettable adventures.</p>
+                <div class="search-box bg-white p-4 rounded-3 shadow-sm">
+                    <form action="{% url 'trips:search' %}" method="get" class="row g-2">
+                        <div class="col-md-5">
+                            <label class="form-label small text-muted">Experience</label>
+                            <select name="category" class="form-select">
+                                <option value="">All Experiences</option>
                                 <option value="cultural">Cultural Tours</option>
                                 <option value="adventure">Adventure Tours</option>
                                 <option value="desert">Desert Safari</option>
@@ -32,13 +24,18 @@
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <input type="text" name="location" class="form-control form-control-lg" placeholder="Destination">
+                            <label class="form-label small text-muted">Destination</label>
+                            <input type="text" name="location" class="form-control" placeholder="Where to?">
                         </div>
-                        <div class="col-md-4">
-                            <button type="submit" class="btn btn-primary btn-lg w-100">Search Tours</button>
+                        <div class="col-md-3">
+                            <label class="form-label small text-muted">&nbsp;</label>
+                            <button type="submit" class="btn btn-primary w-100">Search</button>
                         </div>
                     </form>
                 </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block" data-aos="fade-left">
+                <img src="{% static 'images/hero-image.jpg' %}" alt="Morocco Travel" class="img-fluid rounded-3 shadow">
             </div>
         </div>
     </div>
@@ -50,7 +47,7 @@
         <div class="row mb-5">
             <div class="col-lg-6">
                 <h2 class="display-6 fw-bold">Popular Destinations</h2>
-                <p class="text-muted">Explore our hand-picked selection of extraordinary experiences</p>
+                <p class="text-muted">Explore our hand-picked selection of extraordinary experiences.</p>
             </div>
             <div class="col-lg-6 text-lg-end">
                 <a href="{% url 'trips:trip-list' %}" class="btn btn-outline-primary">View All Destinations</a>
@@ -58,43 +55,59 @@
         </div>
         <div class="row g-4">
             {% for trip in featured_trips %}
-            <div class="col-md-6 col-lg-4">
-                <div class="card trip-card h-100 border-0 shadow-sm overflow-hidden">
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1|add:"00" }}">
+                <div class="card trip-card h-100 border-0 shadow-sm hover-scale">
                     <div class="position-relative">
                         {% if trip.images.first %}
-                        <img src="{{ trip.images.first.image.url }}" class="card-img-top" alt="{{ trip.title }}" style="height: 280px; object-fit: cover;">
+                        <img src="{{ trip.images.first.image.url }}" class="card-img-top" alt="{{ trip.title }}" style="height: 240px; object-fit: cover;">
                         {% else %}
-                        <img src="{% static 'img/placeholder.jpg' %}" class="card-img-top" alt="{{ trip.title }}" style="height: 280px; object-fit: cover;">
+                        <img src="{% static 'images/placeholder.jpg' %}" class="card-img-top" alt="{{ trip.title }}" style="height: 240px; object-fit: cover;">
                         {% endif %}
-                        <div class="trip-overlay">
-                            <a href="{{ trip.get_absolute_url }}" class="btn btn-light">Explore Now</a>
-                        </div>
                         {% if trip.discount %}
-                        <div class="position-absolute top-0 end-0 bg-danger text-white px-3 py-2 m-3 rounded-pill">
-                            {{ trip.discount }}% OFF
+                        <div class="position-absolute top-0 start-0 m-3">
+                            <span class="badge bg-danger">-{{ trip.discount }}%</span>
                         </div>
                         {% endif %}
+                        <div class="position-absolute top-0 end-0 m-3">
+                            <button class="btn btn-light btn-sm rounded-circle shadow-sm" title="Add to favorites">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="badge bg-primary rounded-pill">{{ trip.duration }} Days</span>
-                            <div class="trip-rating">
+                            <span class="badge bg-{{ trip.get_trip_type_display|lower }}-subtle text-{{ trip.get_trip_type_display|lower }}">
+                                {{ trip.get_trip_type_display }}
+                            </span>
+                            <div class="rating-stars">
+                                {% if trip.rating %}
                                 <i class="fas fa-star text-warning"></i>
-                                <span class="ms-1">{{ trip.rating|default:"4.5" }}</span>
-                            </div>
-                        </div>
-                        <h5 class="card-title mb-3">{{ trip.title }}</h5>
-                        <p class="card-text text-muted small mb-3">{{ trip.description|truncatewords:15 }}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="trip-price">
-                                <span class="h5 text-primary mb-0">${{ trip.price }}</span>
-                                {% if trip.discount %}
-                                <small class="text-decoration-line-through text-muted ms-2">${{ trip.original_price }}</small>
+                                <span class="ms-1">{{ trip.rating }}</span>
                                 {% endif %}
                             </div>
-                            <div class="trip-meta">
+                        </div>
+                        <h5 class="card-title mb-1">
+                            <a href="{{ trip.get_absolute_url }}" class="text-decoration-none text-dark stretched-link">{{ trip.title }}</a>
+                        </h5>
+                        <p class="text-muted small mb-3">
+                            <i class="fas fa-map-marker-alt me-1"></i> {{ trip.location }}
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="card-text mb-0">
+                                    {% if trip.original_price %}
+                                    <small class="text-decoration-line-through text-muted">{{ trip.original_price }} MAD</small>
+                                    {% endif %}
+                                    <span class="fw-bold text-primary">{{ trip.price }} MAD</span>
+                                </p>
+                                <small class="text-muted">per person</small>
+                            </div>
+                            <div class="text-end">
+                                <p class="card-text mb-0">
+                                    <i class="far fa-clock me-1"></i> {{ trip.duration }} days
+                                </p>
                                 <small class="text-muted">
-                                    <i class="fas fa-users me-1"></i>{{ trip.max_group_size }} max
+                                    <i class="fas fa-users me-1"></i> Max {{ trip.max_group_size }}
                                 </small>
                             </div>
                         </div>
@@ -112,7 +125,7 @@
         <div class="row mb-5 text-center">
             <div class="col-lg-8 mx-auto">
                 <h2 class="display-6 fw-bold mb-3">Why Travel with Us</h2>
-                <p class="lead text-muted">Experience Morocco like never before with our premium travel services</p>
+                <p class="lead text-muted">Experience Morocco like never before with our premium travel services.</p>
             </div>
         </div>
         <div class="row g-4">
@@ -153,7 +166,7 @@
         <div class="row mb-5 text-center">
             <div class="col-lg-8 mx-auto">
                 <h2 class="display-6 fw-bold mb-3">What Our Travelers Say</h2>
-                <p class="lead text-muted">Read about experiences from our satisfied customers</p>
+                <p class="lead text-muted">Read about experiences from our satisfied customers.</p>
             </div>
         </div>
         <div class="row g-4">
@@ -185,92 +198,151 @@
 </section>
 
 <!-- Newsletter Section -->
-<section class="newsletter py-5 bg-primary">
+<section class="newsletter-section py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{% static 'images/newsletter-bg.jpg' %}') center/cover no-repeat fixed;">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-lg-8 text-center text-white">
-                <h2 class="display-6 fw-bold mb-4">Get Travel Inspiration</h2>
-                <p class="lead mb-4">Subscribe to our newsletter for exclusive deals and travel tips</p>
-                <form action="{% url 'core:newsletter-signup' %}" method="post" class="newsletter-form">
-                    {% csrf_token %}
-                    <div class="row g-2 justify-content-center">
-                        <div class="col-md-8">
-                            <input type="email" name="email" class="form-control form-control-lg" placeholder="Enter your email address" required>
+            <div class="col-lg-8 text-center">
+                <div class="newsletter-content bg-white bg-opacity-10 p-5 rounded-3 backdrop-blur" data-aos="fade-up">
+                    <h2 class="display-6 text-white mb-3">Get Travel Updates</h2>
+                    <p class="lead text-white mb-4">Subscribe to our newsletter and never miss our special offers!</p>
+                    <form class="newsletter-form mx-auto" style="max-width: 500px;">
+                        <div class="input-group">
+                            <input type="email" class="form-control form-control-lg border-0" placeholder="Enter your email" aria-label="Email address">
+                            <button class="btn btn-lg" type="submit" style="background-color: #C19B76; color: white;">
+                                Subscribe
+                                <i class="fas fa-paper-plane ms-2"></i>
+                            </button>
                         </div>
-                        <div class="col-md-auto">
-                            <button type="submit" class="btn btn-light btn-lg px-4">Subscribe</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </section>
+
+<style>
+.backdrop-blur {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.newsletter-section .form-control {
+    padding: 0.8rem 1.5rem;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.newsletter-section .form-control:focus {
+    box-shadow: none;
+    border-color: #C19B76;
+}
+
+.newsletter-section .btn:hover {
+    background-color: #a88561 !important;
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+
+.newsletter-content {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+</style>
+
 {% endblock %}
 
 {% block extra_css %}
 <style>
-.hero {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{% static "img/hero-bg.jpg" %}') no-repeat center/cover;
-}
-
-.trip-card {
-    transition: transform 0.3s ease;
-}
-
-.trip-card:hover {
-    transform: translateY(-5px);
-}
-
-.trip-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.trip-card:hover .trip-overlay {
-    opacity: 1;
-}
-
-.feature-icon {
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.testimonial-card {
-    transition: transform 0.3s ease;
-}
-
-.testimonial-card:hover {
-    transform: translateY(-5px);
-}
-
-.search-form {
-    background: rgba(255,255,255,0.95);
-}
-
-@media (max-width: 768px) {
-    .hero {
-        min-height: 100vh;
+    .hover-scale {
+        transition: transform 0.3s ease;
     }
-    
-    .search-form {
-        margin: 0 15px;
+    .hover-scale:hover {
+        transform: translateY(-5px);
     }
-}
+    .trip-card {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .trip-card .card-img-top {
+        transition: transform 0.3s ease;
+    }
+    .trip-card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+    .search-box {
+        border-radius: 16px;
+    }
+    .form-control, .form-select {
+        border-radius: 8px;
+        border-color: #e0e0e0;
+    }
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 0.25rem rgba(193, 155, 118, 0.25);
+        border-color: #C19B76;
+    }
+    .btn-primary {
+        background-color: #C19B76;
+        border-color: #C19B76;
+        border-radius: 8px;
+    }
+    .btn-primary:hover {
+        background-color: #ab855f;
+        border-color: #ab855f;
+    }
+    .badge {
+        padding: 0.5em 1em;
+        font-weight: 500;
+    }
+    .pagination .page-link {
+        color: #C19B76;
+        border-color: #e0e0e0;
+    }
+    .pagination .page-item.active .page-link {
+        background-color: #C19B76;
+        border-color: #C19B76;
+        color: white;
+    }
+    .newsletter-section {
+        background-color: #f8f9fa;
+    }
+    .empty-state {
+        padding: 3rem;
+    }
+    .bg-adventure-subtle { background-color: #e8f4ff; }
+    .bg-cultural-subtle { background-color: #fff4e6; }
+    .bg-desert-subtle { background-color: #fff9e6; }
+    .bg-umrah-subtle { background-color: #e6f9f6; }
+    .text-adventure { color: #0066cc; }
+    .text-cultural { color: #ff8c00; }
+    .text-desert { color: #cc9900; }
+    .text-umrah { color: #00997a; }
 </style>
+{% endblock %}
 
-<!-- Add Animate.css -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+{% block extra_js %}
+<script>
+    // Initialize AOS
+    AOS.init({
+        duration: 800,
+        once: true
+    });
+
+    // Add smooth scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // Add favorite functionality
+    document.querySelectorAll('.btn-favorite').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            this.querySelector('i').classList.toggle('far');
+            this.querySelector('i').classList.toggle('fas');
+        });
+    });
+</script>
 {% endblock %}

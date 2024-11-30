@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ trip.title }} - Celebrity's Travel{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section position-relative vh-50 d-flex align-items-center" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('{{ trip.image.url }}') no-repeat center/cover;">
+    <div class="container text-center text-white">
+        <h1 class="display-4 fw-bold mb-4">{{ trip.title }}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center">
+                <li class="breadcrumb-item"><a href="{% url 'core:home' %}" class="text-white">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'trips:trip-category' trip.trip_type %}" class="text-white">{{ trip.trip_type|title }}</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page">{{ trip.title }}</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Trip Details -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-lg-8 mb-4 mb-lg-0">
+                <!-- Trip Overview -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h2 class="h4 mb-4">Trip Overview</h2>
+                        <div class="d-flex flex-wrap gap-4 mb-4">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-clock text-primary me-2"></i>
+                                <span>{{ trip.duration }}</span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                <span>{{ trip.location }}</span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-users text-primary me-2"></i>
+                                <span>Group Size: {{ trip.group_size }}</span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-language text-primary me-2"></i>
+                                <span>{{ trip.languages }}</span>
+                            </div>
+                        </div>
+                        <div class="trip-description">
+                            {{ trip.description|safe }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Highlights -->
+                {% if trip.highlights %}
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h2 class="h4 mb-4">Trip Highlights</h2>
+                        <div class="highlights">
+                            {{ trip.highlights|safe }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Itinerary -->
+                {% if trip.itinerary %}
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h2 class="h4 mb-4">Itinerary</h2>
+                        <div class="itinerary">
+                            {{ trip.itinerary|safe }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Included/Excluded -->
+                {% if trip.included or trip.not_included %}
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        {% if trip.included %}
+                        <h2 class="h4 mb-4">What's Included</h2>
+                        <div class="included mb-4">
+                            {{ trip.included|safe }}
+                        </div>
+                        {% endif %}
+                        
+                        {% if trip.not_included %}
+                        <h2 class="h4 mb-4">What's Not Included</h2>
+                        <div class="not-included">
+                            {{ trip.not_included|safe }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Booking Card -->
+                <div class="card shadow-sm mb-4 sticky-top" style="top: 2rem;">
+                    <div class="card-body">
+                        <h3 class="h5 mb-4">Book This Trip</h3>
+                        <div class="price-box mb-4">
+                            <span class="h2 text-primary fw-bold">{{ trip.price }} MAD</span>
+                            <span class="text-muted">/ person</span>
+                        </div>
+                        
+                        <form method="post" action="{% url 'trips:submit-inquiry' %}" class="booking-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="destination" value="{{ trip.id }}">
+                            
+                            <div class="mb-3">
+                                <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <input type="email" name="email" class="form-control" placeholder="Your Email" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <input type="tel" name="phone" class="form-control" placeholder="Your Phone">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <textarea name="message" class="form-control" rows="4" placeholder="Your Message"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100">Book Now</button>
+                        </form>
+                        
+                        <div class="mt-4">
+                            <p class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Instant Confirmation</p>
+                            <p class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>24/7 Customer Support</p>
+                            <p class="mb-0"><i class="fas fa-check-circle text-success me-2"></i>Free Cancellation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Trips -->
+        {% if related_trips %}
+        <section class="related-trips py-5">
+            <h2 class="h3 mb-4">Similar Trips You Might Like</h2>
+            <div class="row">
+                {% for related_trip in related_trips %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm hover-card">
+                        <img src="{{ related_trip.image.url }}" class="card-img-top" alt="{{ related_trip.title }}" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h3 class="h5 card-title">{{ related_trip.title }}</h3>
+                            <p class="text-muted mb-3">{{ related_trip.duration }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 mb-0 text-primary">{{ related_trip.price }} MAD</span>
+                                <a href="{{ related_trip.get_absolute_url }}" class="btn btn-outline-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .sticky-top {
+        z-index: 1020;
+    }
+    .hover-card {
+        transition: transform 0.3s ease;
+    }
+    .hover-card:hover {
+        transform: translateY(-5px);
+    }
+    .price-box {
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border-radius: 0.5rem;
+        text-align: center;
+    }
+    .breadcrumb-item + .breadcrumb-item::before {
+        color: white;
+    }
+</style>
+{% endblock %}
