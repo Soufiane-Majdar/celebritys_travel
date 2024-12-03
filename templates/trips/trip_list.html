@@ -36,9 +36,9 @@
             </div>
             <div class="col-lg-6 d-none d-lg-block" data-aos="fade-left">
                 {% if category %}
-                <img src="{% static 'images/'|add:category|add:'-hero.jpg' %}" alt="Morocco Travel" class="img-fluid rounded-3 shadow">
+                <img src="{% static 'images/compressed/'|add:category|add:'-hero.jpg' %}" alt="Morocco Travel" class="img-fluid rounded-3 shadow">
                 {% else %}
-                <img src="{% static 'images/hero-image.jpg' %}" alt="Morocco Travel" class="img-fluid rounded-3 shadow">
+                <img src="{% static 'images/compressed/hero-image.jpg' %}" alt="Morocco Travel" class="img-fluid rounded-3 shadow">
                 {% endif %}
             </div>
         </div>
@@ -81,7 +81,7 @@
                         {% if trip.images.first %}
                         <img src="{{ trip.images.first.image.url }}" class="card-img-top" alt="{{ trip.title }}" style="height: 240px; object-fit: cover;">
                         {% else %}
-                        <img src="{% static 'images/placeholder.jpg' %}" class="card-img-top" alt="{{ trip.title }}" style="height: 240px; object-fit: cover;">
+                        <img src="{% static 'images/compressed/placeholder.jpg' %}" class="card-img-top" alt="{{ trip.title }}" style="height: 240px; object-fit: cover;">
                         {% endif %}
                         {% if trip.discount %}
                         <div class="position-absolute top-0 start-0 m-3">
@@ -137,7 +137,7 @@
             {% empty %}
             <div class="col-12 text-center py-5">
                 <div class="empty-state">
-                    <img src="{% static 'images/empty-state.svg' %}" alt="No trips found" class="mb-4" style="max-width: 200px;">
+                    <img src="{% static 'images/compressed/empty-state.svg' %}" alt="No trips found" class="mb-4" style="max-width: 200px;">
                     <h3>No trips found</h3>
                     <p class="text-muted">Try adjusting your search criteria or browse our other amazing destinations.</p>
                     <a href="{% url 'trips:trip-list' %}" class="btn btn-primary">View All Trips</a>

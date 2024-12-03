@@ -14,7 +14,7 @@
                 <a href="#packages" class="btn btn-primary">استكشف الباقات</a>
             </div>
             <div class="col-lg-6 d-none d-lg-block" data-aos="fade-left">
-                <img src="{% static 'images/umrah-hero.jpg' %}" alt="خدمات العمرة" class="img-fluid rounded-3 shadow">
+                <img src="{% static 'images/compressed/umrah-hero.jpg' %}" alt="خدمات العمرة" class="img-fluid rounded-3 shadow">
             </div>
         </div>
     </div>
@@ -37,7 +37,7 @@
                         {% if package.image %}
                         <img src="{{ package.image.url }}" class="card-img-top" alt="{{ package.title }}" style="height: 240px; object-fit: cover;">
                         {% else %}
-                        <img src="{% static 'images/placeholder.jpg' %}" class="card-img-top" alt="{{ package.title }}" style="height: 240px; object-fit: cover;">
+                        <img src="{% static 'images/compressed/placeholder.jpg' %}" class="card-img-top" alt="{{ package.title }}" style="height: 240px; object-fit: cover;">
                         {% endif %}
                         <div class="position-absolute top-0 end-0 m-3">
                             <span class="badge bg-success">{{ package.duration }} أيام</span>

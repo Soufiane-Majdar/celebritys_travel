@@ -158,16 +158,23 @@ MEDIA_ROOT = BASE_DIR / 'media'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
+# Caching
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'cache'),
+    }
+}
+
 # Django Compressor settings
+COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = False  # Changed to False for development
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'compressor.finders.CompressorFinder',
 ]
 
-COMPRESS_ENABLED = True
-COMPRESS_ROOT = STATIC_ROOT
-COMPRESS_OUTPUT_DIR = 'compressed'
 COMPRESS_CSS_FILTERS = [
     'compressor.filters.css_default.CssAbsoluteFilter',
     'compressor.filters.cssmin.rCSSMinFilter',
@@ -176,9 +183,8 @@ COMPRESS_JS_FILTERS = [
     'compressor.filters.jsmin.JSMinFilter',
 ]
 
-# Disable offline compression for development
-COMPRESS_OFFLINE = False
-COMPRESS_PRECOMPILERS = ()
+COMPRESS_ROOT = STATIC_ROOT
+COMPRESS_OUTPUT_DIR = 'compressed'
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For development

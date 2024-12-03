@@ -36,7 +36,7 @@
                 </div>
             </div>
             <div class="col-lg-6 d-none d-lg-block" data-aos="fade-left">
-                <img src="{% static 'images/hero-image.jpg' %}" alt="{% trans 'Morocco Travel' %}" class="img-fluid rounded-3 shadow">
+                <img src="{% static 'images/compressed/hero-image.jpg' %}" alt="{% trans 'Morocco Travel' %}" class="img-fluid rounded-3 shadow">
             </div>
         </div>
     </div>
@@ -62,7 +62,7 @@
                         {% if trip.images.first %}
                         <img src="{{ trip.images.first.image.url }}" class="card-img-top" alt="{{ trip.title }}" style="height: 240px; object-fit: cover;">
                         {% else %}
-                        <img src="{% static 'images/placeholder.jpg' %}" class="card-img-top" alt="{{ trip.title }}" style="height: 240px; object-fit: cover;">
+                        <img src="{% static 'images/compressed/placeholder.jpg' %}" class="card-img-top" alt="{{ trip.title }}" style="height: 240px; object-fit: cover;">
                         {% endif %}
                         {% if trip.discount %}
                         <div class="position-absolute top-0 start-0 m-3">
@@ -199,7 +199,7 @@
 </section>
 
 <!-- Newsletter Section -->
-<section class="newsletter-section py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{% static 'images/newsletter-bg.jpg' %}') center/cover no-repeat fixed;">
+<section class="newsletter-section py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{% static 'images/compressed/newsletter-bg.jpg' %}') center/cover no-repeat fixed;">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8 text-center">
