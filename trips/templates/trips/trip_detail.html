@@ -1,0 +1,157 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Trip Images -->
+        <div class="col-md-8">
+            {% if trip.images.exists %}
+            <div id="tripCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for image in trip.images.all %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ image.alt_text }}">
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#tripCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#tripCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Trip Details -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h1 class="card-title">{{ trip.title }}</h1>
+                    <p class="text-muted mb-3">
+                        <i class="fas fa-map-marker-alt"></i> {{ trip.location }}
+                    </p>
+                    
+                    <div class="price-section mb-4">
+                        {% if trip.discount %}
+                        <span class="text-decoration-line-through text-muted">${{ trip.original_price }}</span>
+                        {% endif %}
+                        <span class="h3 text-primary">${{ trip.price }}</span>
+                        {% if trip.discount %}
+                        <span class="badge bg-danger">-{{ trip.discount }}%</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="trip-meta mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span><i class="fas fa-clock"></i> {% trans "Duration" %}</span>
+                            <span>{{ trip.duration }} {% trans "days" %}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span><i class="fas fa-users"></i> {% trans "Group Size" %}</span>
+                            <span>{% trans "Up to" %} {{ trip.max_group_size }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span><i class="fas fa-star"></i> {% trans "Rating" %}</span>
+                            <span>{{ trip.rating }}/5</span>
+                        </div>
+                    </div>
+                    
+                    <a href="{% url 'trips:make-reservation' trip.slug %}" class="btn btn-primary btn-lg w-100 mb-3">
+                        {% trans "Book Now" %}
+                    </a>
+                    
+                    <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#inquiryModal">
+                        {% trans "Make an Inquiry" %}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trip Description -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title">{% trans "About This Trip" %}</h3>
+                    {{ trip.description|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Trips -->
+    {% if related_trips %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="mb-4">{% trans "Similar Trips You Might Like" %}</h3>
+        </div>
+        {% for related_trip in related_trips %}
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                {% if related_trip.images.filter.exists %}
+                <img src="{{ related_trip.images.first.image.url }}" class="card-img-top" alt="{{ related_trip.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ related_trip.title }}</h5>
+                    <p class="card-text text-muted">{{ related_trip.location }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="h5 mb-0">${{ related_trip.price }}</span>
+                        <a href="{{ related_trip.get_absolute_url }}" class="btn btn-outline-primary">
+                            {% trans "View Details" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- Inquiry Modal -->
+<div class="modal fade" id="inquiryModal" tabindex="-1" aria-labelledby="inquiryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="inquiryModalLabel">{% trans "Make an Inquiry" %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'trips:submit-inquiry' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="destination" value="{{ trip.id }}">
+                    
+                    <div class="mb-3">
+                        <label for="name" class="form-label">{% trans "Your Name" %}</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label">{% trans "Email" %}</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">{% trans "Phone" %}</label>
+                        <input type="tel" class="form-control" id="phone" name="phone" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="message" class="form-label">{% trans "Message" %}</label>
+                        <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">{% trans "Submit Inquiry" %}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

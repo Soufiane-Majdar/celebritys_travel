@@ -1,0 +1,145 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Reservation Confirmation - Celebrity's Travel{% endblock %}
+
+{% block content %}
+<!-- Confirmation Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-lg">
+                    <div class="card-body p-5">
+                        <!-- Success Message -->
+                        <div class="text-center mb-4">
+                            <div class="display-1 text-success mb-3">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <h1 class="h2 text-primary">Thank You for Your Reservation!</h1>
+                            <p class="text-muted">Your booking has been confirmed and processed successfully.</p>
+                        </div>
+
+                        <!-- Booking Details -->
+                        <div class="booking-details mb-4">
+                            <h3 class="h4 mb-3">Booking Details</h3>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row" style="width: 35%;">Booking Reference:</th>
+                                            <td><strong>{{ reservation.reference_number }}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Trip:</th>
+                                            <td>{{ reservation.trip.title }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Duration:</th>
+                                            <td>{{ reservation.trip.duration }} Days</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Number of People:</th>
+                                            <td>{{ reservation.number_of_people }} Person{{ reservation.number_of_people|pluralize }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Booked By:</th>
+                                            <td>{{ reservation.name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Email:</th>
+                                            <td>{{ reservation.email }}</td>
+                                        </tr>
+                                        {% if reservation.phone %}
+                                        <tr>
+                                            <th scope="row">Phone:</th>
+                                            <td>{{ reservation.phone }}</td>
+                                        </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Price Breakdown -->
+                        <div class="price-breakdown mb-4">
+                            <h3 class="h4 mb-3">Price Breakdown</h3>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>Base Price (per person)</td>
+                                            <td class="text-end">{{ reservation.trip.price }} MAD</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Number of People</td>
+                                            <td class="text-end">× {{ reservation.number_of_people }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Subtotal</td>
+                                            <td class="text-end">{{ reservation.subtotal }} MAD</td>
+                                        </tr>
+                                        {% if reservation.discount_amount %}
+                                        <tr>
+                                            <td>Discount ({{ reservation.discount_percentage }}%)</td>
+                                            <td class="text-end text-success">-{{ reservation.discount_amount }} MAD</td>
+                                        </tr>
+                                        {% endif %}
+                                        <tr class="table-active">
+                                            <th>Total Price</th>
+                                            <th class="text-end">{{ reservation.total_price }} MAD</th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Next Steps -->
+                        <div class="next-steps mb-4">
+                            <h3 class="h4 mb-3">Next Steps</h3>
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <ol class="mb-0">
+                                        <li class="mb-2">Check your email for a detailed confirmation of your booking.</li>
+                                        <li class="mb-2">Our team will contact you within 24 hours to discuss payment options.</li>
+                                        <li class="mb-2">Prepare any necessary travel documents (passport, visa, etc.).</li>
+                                        <li>Feel free to contact us if you have any questions or special requirements.</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information -->
+                        <div class="contact-info text-center">
+                            <h3 class="h4 mb-3">Need Help?</h3>
+                            <p class="mb-3">Our customer support team is here to assist you 24/7</p>
+                            <div class="row justify-content-center">
+                                <div class="col-sm-6">
+                                    <div class="d-grid gap-2">
+                                        <a href="tel:+212600000000" class="btn btn-outline-primary">
+                                            <i class="fas fa-phone me-2"></i>Call Us
+                                        </a>
+                                        <a href="mailto:support@celebritystravel.com" class="btn btn-outline-primary">
+                                            <i class="fas fa-envelope me-2"></i>Email Us
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Actions -->
+                <div class="text-center mt-4">
+                    <a href="{% url 'core:home' %}" class="btn btn-link text-muted me-3">
+                        <i class="fas fa-home me-1"></i>Return to Home
+                    </a>
+                    <a href="{% url 'trips:trip-list' %}" class="btn btn-link text-muted">
+                        <i class="fas fa-search me-1"></i>Browse More Trips
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

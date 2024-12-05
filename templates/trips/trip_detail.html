@@ -123,9 +123,8 @@
                         </div>
                         
                         <!-- Booking Form -->
-                        <form method="post" action="{% url 'trips:submit-inquiry' %}" class="booking-form">
+                        <form method="post" action="{% url 'trips:make-reservation' trip.slug %}" class="booking-form" id="reservationForm">
                             {% csrf_token %}
-                            <input type="hidden" name="destination" value="{{ trip.id }}">
                             
                             <div class="mb-3">
                                 <div class="form-floating">
@@ -147,11 +146,64 @@
                                     <label for="phone">Your Phone (Optional)</label>
                                 </div>
                             </div>
+
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <select class="form-select" id="numberOfPeople" name="number_of_people" required>
+                                        {% for i in "123456789"|make_list %}
+                                        <option value="{{ i }}">{{ i }} Person{{ i|pluralize }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="numberOfPeople">Number of People</label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="date" name="preferred_date" class="form-control" id="preferredDate" required>
+                                    <label for="preferredDate">Preferred Date</label>
+                                </div>
+                            </div>
+
+                            <!-- Coupon Code -->
+                            <div class="mb-4">
+                                <h6 class="mb-2">Have a Coupon?</h6>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="couponCode" name="coupon_code" placeholder="Enter coupon code">
+                                    <button class="btn btn-outline-primary" type="button" id="applyCoupon">Apply</button>
+                                </div>
+                                <div id="couponMessage" class="form-text mt-2"></div>
+                            </div>
+
+                            <!-- Price Calculation -->
+                            <div class="price-calculation mb-4 p-3 bg-light rounded">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Base Price (per person):</span>
+                                    <span>{{ trip.price }} MAD</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Number of People:</span>
+                                    <span id="displayPeople">1</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Subtotal:</span>
+                                    <span id="subtotal">{{ trip.price }} MAD</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2" id="discountRow" style="display: none;">
+                                    <span>Discount:</span>
+                                    <span id="discountAmount">0 MAD</span>
+                                </div>
+                                <hr class="my-2">
+                                <div class="d-flex justify-content-between">
+                                    <span class="fw-bold">Total Price:</span>
+                                    <span class="fw-bold" id="totalPrice">{{ trip.price }} MAD</span>
+                                </div>
+                            </div>
                             
                             <div class="mb-4">
                                 <div class="form-floating">
-                                    <textarea name="message" class="form-control" id="message" style="height: 100px" placeholder="Your Message"></textarea>
-                                    <label for="message">Your Message (Optional)</label>
+                                    <textarea name="special_requirements" class="form-control" id="specialRequests" style="height: 100px" placeholder="Special Requirements"></textarea>
+                                    <label for="specialRequests">Special Requirements (Optional)</label>
                                 </div>
                             </div>
                             
@@ -310,5 +362,134 @@
             behavior: 'smooth'
         });
     });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('reservationForm');
+    const numberOfPeopleSelect = document.getElementById('numberOfPeople');
+    const couponCodeInput = document.getElementById('couponCode');
+    const applyCouponBtn = document.getElementById('applyCoupon');
+    const couponMessage = document.getElementById('couponMessage');
+    const subtotalSpan = document.getElementById('subtotal');
+    const discountRow = document.getElementById('discountRow');
+    const discountAmount = document.getElementById('discountAmount');
+    const totalPriceSpan = document.getElementById('totalPrice');
+    const displayPeople = document.getElementById('displayPeople');
+    const preferredDateInput = document.getElementById('preferredDate');
+    
+    const basePrice = {{ trip.price }};
+    let currentDiscount = 0;
+    
+    // Set minimum date to today
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];
+    preferredDateInput.min = formattedDate;
+    
+    // Update price calculation when number of people changes
+    function updatePriceCalculation() {
+        const numberOfPeople = parseInt(numberOfPeopleSelect.value);
+        const subtotal = basePrice * numberOfPeople;
+        const discount = (subtotal * currentDiscount) / 100;
+        const total = subtotal - discount;
+        
+        displayPeople.textContent = numberOfPeople;
+        subtotalSpan.textContent = subtotal.toFixed(2) + ' MAD';
+        
+        if (currentDiscount > 0) {
+            discountRow.style.display = 'block';
+            discountAmount.textContent = '-' + discount.toFixed(2) + ' MAD';
+        } else {
+            discountRow.style.display = 'none';
+        }
+        
+        totalPriceSpan.textContent = total.toFixed(2) + ' MAD';
+    }
+    
+    // Handle coupon application
+    applyCouponBtn.addEventListener('click', function() {
+        const couponCode = couponCodeInput.value.trim();
+        if (!couponCode) {
+            showCouponMessage('Please enter a coupon code.', 'text-danger');
+            return;
+        }
+        
+        // Send AJAX request to validate coupon
+        fetch('{% url "trips:validate-coupon" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                coupon_code: couponCode,
+                trip_id: {{ trip.id }}
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.valid) {
+                currentDiscount = data.discount_percentage;
+                showCouponMessage('Coupon applied successfully! ' + currentDiscount + '% discount', 'text-success');
+                updatePriceCalculation();
+            } else {
+                currentDiscount = 0;
+                showCouponMessage(data.message || 'Invalid coupon code.', 'text-danger');
+                updatePriceCalculation();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showCouponMessage('Error validating coupon. Please try again.', 'text-danger');
+        });
+    });
+    
+    function showCouponMessage(message, className) {
+        couponMessage.textContent = message;
+        couponMessage.className = 'form-text mt-2 ' + className;
+    }
+    
+    // Update prices when number of people changes
+    numberOfPeopleSelect.addEventListener('change', updatePriceCalculation);
+    
+    // Initial price calculation
+    updatePriceCalculation();
+    
+    // Form submission
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Add loading state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Processing...';
+        
+        // Submit the form
+        fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = data.redirect_url;
+            } else {
+                // Show error message
+                alert(data.message || 'Error making reservation. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error making reservation. Please try again.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+        });
+    });
+});
 </script>
 {% endblock %}

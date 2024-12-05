@@ -1,0 +1,296 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Book {{ trip.title }} - Celebrity's Travel{% endblock %}
+
+{% block content %}
+<!-- Reservation Form Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-lg">
+                    <div class="card-body p-5">
+                        <h1 class="h2 text-primary mb-4">Book Your Trip</h1>
+                        
+                        <!-- Trip Summary -->
+                        <div class="trip-summary mb-4 p-4 bg-light rounded-3">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="{{ trip.images.first.image.url }}" alt="{{ trip.title }}" class="rounded me-3" style="width: 100px; height: 70px; object-fit: cover;">
+                                <div>
+                                    <h3 class="h5 mb-1">{{ trip.title }}</h3>
+                                    <p class="text-muted mb-0">{{ trip.duration }} Days | {{ trip.location }}</p>
+                                </div>
+                            </div>
+                            <div class="price-details">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Base Price per Person:</span>
+                                    <span class="h5 mb-0">{{ trip.price }} MAD</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reservation Form -->
+                        <form method="post" id="reservationForm">
+                            {% csrf_token %}
+                            
+                            <!-- Personal Information -->
+                            <h4 class="mb-3">Personal Information</h4>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
+                                        <label for="name">Full Name</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required>
+                                        <label for="email">Email Address</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="Your Phone">
+                                        <label for="phone">Phone Number</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <select class="form-select" id="numberOfPeople" name="number_of_people" required>
+                                            {% for i in "123456789"|make_list %}
+                                            <option value="{{ i }}">{{ i }} Person{{ i|pluralize }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <label for="numberOfPeople">Number of People</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Coupon Code -->
+                            <div class="mb-4">
+                                <h4 class="mb-3">Have a Coupon?</h4>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="couponCode" name="coupon_code" placeholder="Enter coupon code">
+                                    <button class="btn btn-outline-primary" type="button" id="applyCoupon">Apply Coupon</button>
+                                </div>
+                                <div id="couponMessage" class="form-text mt-2"></div>
+                            </div>
+
+                            <!-- Price Calculation -->
+                            <div class="price-calculation mb-4 p-4 bg-light rounded-3">
+                                <h4 class="mb-3">Price Summary</h4>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Base Price (per person):</span>
+                                    <span>{{ trip.price }} MAD</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Number of People:</span>
+                                    <span id="displayPeople">1</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Subtotal:</span>
+                                    <span id="subtotal">{{ trip.price }} MAD</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2" id="discountRow" style="display: none !important;">
+                                    <span>Discount:</span>
+                                    <span id="discountAmount">0 MAD</span>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                    <span class="h5 mb-0">Total Price:</span>
+                                    <span class="h5 mb-0" id="totalPrice">{{ trip.price }} MAD</span>
+                                </div>
+                            </div>
+
+                            <!-- Special Requests -->
+                            <div class="mb-4">
+                                <h4 class="mb-3">Special Requests</h4>
+                                <div class="form-floating">
+                                    <textarea class="form-control" id="specialRequests" name="special_requests" style="height: 100px" placeholder="Any special requests?"></textarea>
+                                    <label for="specialRequests">Any special requests or requirements?</label>
+                                </div>
+                            </div>
+
+                            <!-- Terms and Conditions -->
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
+                                    <label class="form-check-label" for="terms">
+                                        I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">terms and conditions</a>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                Complete Booking
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Terms and Conditions Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Add your terms and conditions content here -->
+                <h6>1. Booking and Payment</h6>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+                
+                <h6>2. Cancellation Policy</h6>
+                <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</p>
+                
+                <h6>3. Travel Insurance</h6>
+                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('reservationForm');
+    const numberOfPeopleSelect = document.getElementById('numberOfPeople');
+    const couponCodeInput = document.getElementById('couponCode');
+    const applyCouponBtn = document.getElementById('applyCoupon');
+    const couponMessage = document.getElementById('couponMessage');
+    const subtotalSpan = document.getElementById('subtotal');
+    const discountRow = document.getElementById('discountRow');
+    const discountAmount = document.getElementById('discountAmount');
+    const totalPriceSpan = document.getElementById('totalPrice');
+    const displayPeople = document.getElementById('displayPeople');
+    
+    const basePrice = {{ trip.price }};
+    let currentDiscount = 0;
+    
+    // Update price calculation when number of people changes
+    function updatePriceCalculation() {
+        const numberOfPeople = parseInt(numberOfPeopleSelect.value);
+        const subtotal = basePrice * numberOfPeople;
+        const discount = (subtotal * currentDiscount) / 100;
+        const total = subtotal - discount;
+        
+        displayPeople.textContent = numberOfPeople;
+        subtotalSpan.textContent = subtotal + ' MAD';
+        
+        if (currentDiscount > 0) {
+            discountRow.style.display = 'flex';
+            discountAmount.textContent = '-' + discount + ' MAD';
+        } else {
+            discountRow.style.display = 'none';
+        }
+        
+        totalPriceSpan.textContent = total + ' MAD';
+    }
+    
+    // Handle coupon application
+    applyCouponBtn.addEventListener('click', function() {
+        const couponCode = couponCodeInput.value.trim();
+        if (!couponCode) {
+            showCouponMessage('Please enter a coupon code.', 'text-danger');
+            return;
+        }
+        
+        // Send AJAX request to validate coupon
+        fetch('{% url "trips:validate-coupon" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                coupon_code: couponCode,
+                trip_id: {{ trip.id }}
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.valid) {
+                currentDiscount = data.discount_percentage;
+                showCouponMessage('Coupon applied successfully! ' + currentDiscount + '% discount', 'text-success');
+                updatePriceCalculation();
+            } else {
+                currentDiscount = 0;
+                showCouponMessage(data.message || 'Invalid coupon code.', 'text-danger');
+                updatePriceCalculation();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showCouponMessage('Error validating coupon. Please try again.', 'text-danger');
+        });
+    });
+    
+    function showCouponMessage(message, className) {
+        couponMessage.textContent = message;
+        couponMessage.className = 'form-text mt-2 ' + className;
+    }
+    
+    // Update prices when number of people changes
+    numberOfPeopleSelect.addEventListener('change', updatePriceCalculation);
+    
+    // Initial price calculation
+    updatePriceCalculation();
+    
+    // Form submission
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Add loading state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Processing...';
+        
+        // Collect form data
+        const formData = new FormData(form);
+        formData.append('trip_id', {{ trip.id }});
+        if (currentDiscount > 0) {
+            formData.append('applied_discount', currentDiscount);
+        }
+        
+        // Send reservation request
+        fetch('{% url "trips:make-reservation" %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = data.redirect_url;
+            } else {
+                // Show error message
+                alert(data.message || 'Error making reservation. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error making reservation. Please try again.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+        });
+    });
+});
+</script>
+{% endblock %}

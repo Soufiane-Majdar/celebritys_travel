@@ -1,7 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.paginator import Paginator
-from .models import Destination, Inquiry
+from django.utils import timezone
+from django.http import JsonResponse
+import json
+from .models import Destination, Inquiry, Reservation, Coupon
+from .forms import ReservationForm
+from django.urls import reverse
 
 def trip_list(request):
     trips = Destination.objects.all().order_by('-created_at')
@@ -91,3 +96,96 @@ def search(request):
 
 def umrah_services(request):
     return render(request, 'trips/umrah_services.html')
+
+def make_reservation(request, slug):
+    trip = get_object_or_404(Destination, slug=slug)
+    
+    if request.method == 'POST':
+        data = request.POST.copy()
+        data['destination'] = trip.id
+        form = ReservationForm(data)
+        
+        if form.is_valid():
+            reservation = form.save(commit=False)
+            reservation.destination = trip
+            
+            # Handle coupon if provided
+            coupon_code = form.cleaned_data.get('coupon_code')
+            if coupon_code:
+                try:
+                    coupon = Coupon.objects.get(code=coupon_code)
+                    if coupon.is_valid():
+                        reservation.coupon = coupon
+                except Coupon.DoesNotExist:
+                    pass
+            
+            # Save the reservation
+            reservation.save()
+            
+            return JsonResponse({
+                'success': True,
+                'redirect_url': reverse('trips:reservation-confirmation', kwargs={'pk': reservation.pk})
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'message': 'Please correct the form errors.',
+                'errors': form.errors
+            })
+    
+    # This should never be called since we're handling the form in trip_detail.html
+    return redirect('trips:trip-detail', slug=slug)
+
+def validate_coupon(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            code = data.get('coupon_code')
+            trip_id = data.get('trip_id')
+            
+            try:
+                coupon = Coupon.objects.get(code=code)
+                trip = Destination.objects.get(id=trip_id)
+                
+                if not coupon.is_valid():
+                    return JsonResponse({
+                        'valid': False,
+                        'message': 'This coupon has expired or reached maximum uses.'
+                    })
+                
+                if coupon.trip_type and coupon.trip_type != trip.trip_type:
+                    return JsonResponse({
+                        'valid': False,
+                        'message': 'This coupon is not valid for this type of trip.'
+                    })
+                
+                return JsonResponse({
+                    'valid': True,
+                    'discount_percentage': coupon.discount_percentage,
+                    'message': f'Coupon applied! You will get {coupon.discount_percentage}% off.'
+                })
+                
+            except Coupon.DoesNotExist:
+                return JsonResponse({
+                    'valid': False,
+                    'message': 'Invalid coupon code.'
+                })
+            except Destination.DoesNotExist:
+                return JsonResponse({
+                    'valid': False,
+                    'message': 'Invalid trip.'
+                })
+        except json.JSONDecodeError:
+            return JsonResponse({
+                'valid': False,
+                'message': 'Invalid JSON data.'
+            })
+    
+    return JsonResponse({'valid': False, 'message': 'Invalid request.'})
+
+def reservation_confirmation(request, pk):
+    reservation = get_object_or_404(Reservation, pk=pk)
+    context = {
+        'reservation': reservation,
+    }
+    return render(request, 'trips/reservation_confirmation.html', context)

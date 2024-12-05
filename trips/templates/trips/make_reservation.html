@@ -1,0 +1,174 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">{% trans "Book Your Trip" %}</h2>
+                    
+                    <div class="trip-summary mb-4">
+                        <h4>{{ trip.title }}</h4>
+                        <p class="text-muted">{{ trip.location }} - {{ trip.duration }} {% trans "days" %}</p>
+                        <div class="price-info mb-3">
+                            {% if trip.discount %}
+                            <div class="original-price">
+                                <span class="text-decoration-line-through text-muted h5">${{ trip.original_price }}</span>
+                                <span class="badge bg-danger">-{{ trip.discount }}%</span>
+                            </div>
+                            {% endif %}
+                            <div class="current-price">
+                                <span class="h3 text-primary" id="basePrice">${{ trip.price }}</span>
+                                <span class="text-muted">{% trans "per person" %}</span>
+                            </div>
+                        </div>
+
+                        <!-- Coupon Section -->
+                        <div class="coupon-section mb-4">
+                            <label class="form-label">{% trans "Have a coupon?" %}</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="id_coupon_code" name="coupon_code" 
+                                       placeholder="{% trans 'Enter your coupon code' %}">
+                                <button class="btn btn-outline-primary" type="button" id="applyCouponBtn">
+                                    {% trans "Apply" %}
+                                </button>
+                            </div>
+                            <div id="couponMessage" class="form-text mt-2"></div>
+                        </div>
+                    </div>
+
+                    <form method="post" id="reservationForm">
+                        {% csrf_token %}
+                        
+                        {% for field in form %}
+                            {% if field.name != 'coupon_code' %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">
+                                    {{ field.label }}
+                                </label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                                {% endif %}
+                                {% if field.errors %}
+                                    {% for error in field.errors %}
+                                        <div class="invalid-feedback d-block">{{ error }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+
+                        <div class="price-calculation mt-4 mb-3">
+                            <h5>{% trans "Price Summary" %}</h5>
+                            <div class="d-flex justify-content-between">
+                                <span>{% trans "Base Price" %}:</span>
+                                <span>${{ trip.price }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>{% trans "Number of People" %}:</span>
+                                <span id="peopleCount">1</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>{% trans "Subtotal" %}:</span>
+                                <span id="subtotalPrice">${{ trip.price }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between discount-row" style="display: none;">
+                                <span>{% trans "Coupon Discount" %}:</span>
+                                <span id="discountAmount" class="text-success">-$0</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <strong>{% trans "Total Price" %}:</strong>
+                                <strong id="totalPrice" class="text-primary h4">${{ trip.price }}</strong>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            {% trans "Complete Reservation" %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('reservationForm');
+    const peopleInput = document.getElementById('id_number_of_people');
+    const couponInput = document.getElementById('id_coupon_code');
+    const applyCouponBtn = document.getElementById('applyCouponBtn');
+    const couponMessage = document.getElementById('couponMessage');
+    const basePrice = {{ trip.price }};
+    let currentDiscount = 0;
+
+    function updatePriceCalculation() {
+        const people = parseInt(peopleInput.value) || 1;
+        const subtotal = basePrice * people;
+        const discount = subtotal * (currentDiscount / 100);
+        const total = subtotal - discount;
+
+        document.getElementById('peopleCount').textContent = people;
+        document.getElementById('subtotalPrice').textContent = `$${subtotal.toFixed(2)}`;
+        document.getElementById('totalPrice').textContent = `$${total.toFixed(2)}`;
+
+        const discountRow = document.querySelector('.discount-row');
+        if (currentDiscount > 0) {
+            discountRow.style.display = 'flex';
+            document.getElementById('discountAmount').textContent = `-$${discount.toFixed(2)}`;
+        } else {
+            discountRow.style.display = 'none';
+        }
+    }
+
+    peopleInput.addEventListener('input', updatePriceCalculation);
+
+    applyCouponBtn.addEventListener('click', function() {
+        const code = couponInput.value.trim();
+        if (!code) {
+            couponMessage.textContent = "{% trans 'Please enter a coupon code' %}";
+            couponMessage.className = 'form-text text-danger';
+            return;
+        }
+
+        fetch('{% url "trips:validate-coupon" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: `coupon_code=${encodeURIComponent(code)}&trip_id={{ trip.id }}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.valid) {
+                currentDiscount = data.discount_percentage;
+                couponMessage.textContent = data.message;
+                couponMessage.className = 'form-text text-success';
+            } else {
+                currentDiscount = 0;
+                couponMessage.textContent = data.message;
+                couponMessage.className = 'form-text text-danger';
+            }
+            updatePriceCalculation();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            currentDiscount = 0;
+            couponMessage.textContent = "{% trans 'An error occurred. Please try again.' %}";
+            couponMessage.className = 'form-text text-danger';
+            updatePriceCalculation();
+        });
+    });
+
+    updatePriceCalculation();
+});
+</script>
+{% endblock %}
